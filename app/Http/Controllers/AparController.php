@@ -30,8 +30,9 @@ class AparController extends Controller
         return DataTables::of($data)
             ->addColumn('media_id', fn($row) => $row->media->media_name ?? '-')
             ->addColumn('location_id', fn($row) => $row->location->location_name ?? '-')
+            ->addColumn('location_detail', fn($row) => $row->location_detail ?? '-')
             ->addColumn('action', function($row) {
-                return '<button class="btn btn-sm btn-primary btn-edit" data-id="'.$row->id.'">Edit</button>';
+                return '<button class="btn btn-sm btn-primary btn-detail" data-id="'.$row->id.'">Detail</button>';
             })
             ->rawColumns(['media_id', 'location_id', 'action'])
             ->make(true);
@@ -117,7 +118,7 @@ class AparController extends Controller
         $apar = Apar::findOrFail($id);
         $apar->update($request->all());
 
-        return response()->json(['message' => 'APAR updated successfully']);
+        return redirect()->back()->with('success', 'Data APAR berhasil diupdate.');
     }
 
 

@@ -119,130 +119,113 @@ $(function () {
         ],
         responsive: true
     });
+});
+</script>
 
-    $('#apar-table').on('click', '.btn-edit', function () {
-        const apar = $(this).data('apar');
+<script>
+    $('#addAparBtn').on('click', function () {
+        const form = $('#form-apar');
+        form.trigger('reset');
+        form.attr('action', '{{ route("admin.apar.store") }}');
+        $('#methodField').val('POST');
 
-        // Isi modal dengan data
-        $('#form-apar').attr('action', `/admin/apar/${apar.id}`); // update ke route update
-        $('#form-apar input[name="brand"]').val(apar.brand);
-        $('#form-apar select[name="media_id"]').val(apar.media_id);
-        $('#form-apar input[name="type"]').val(apar.type);
-        $('#form-apar input[name="capacity"]').val(apar.capacity);
-        $('#form-apar input[name="expired_date"]').val(apar.expired_date);
-        $('#form-apar select[name="location_id"]').val(apar.location_id);
-        $('#form-apar textarea[name="location_detail"]').val(apar.location_detail);
+        // Reset semua dropdown
+        form.find('select').val('').trigger('change');
 
-        // Ganti title modal dan button
-        $('#modal-apar-label').text('Edit Data APAR');
-        $('#modal-apar button[type="submit"]').text('Update');
+        // Ubah tampilan
+        $('#modal-apar-label').text('Tambah Data APAR');
+        $('#modal-apar button[type="submit"]').text('Simpan');
 
-        // Tampilkan modal
         $('#modal-apar').modal('show');
     });
-});
 </script>
+
+
 <script>
-  $('#modal-apar').on('show.bs.modal', function (e) {
-  const form = $('#form-apar');
-  const mode = form.data('mode'); // Bisa create/edit
+    $('#modal-apar').on('show.bs.modal', function () {
+    const form = $('#form-apar');
+    const mode = form.data('mode');
 
-  // Jika mode create (Tambah Data), kosongkan semua input
-  if (mode === 'create') {
-    form.trigger('reset');
+    if (mode === 'create') {
+        form.trigger('reset');
+        form.find('input[name="_method"]').remove();
+        form.find('select').each(function () {
+        $(this).val('').trigger('change');
+        $(this).find('option[selected]').prop('selected', true);
+        });
+    }
+    });
+</script>
 
-    // Reset dropdowns ke default (pilihan pertama)
-    form.find('select').each(function () {
-      $(this).val('').trigger('change');
+<script>
+    let currentAparId = null;
+    
+    $(document).on('click', '.btn-detail', function () {
+        const id = $(this).data('id');
+        currentAparId = id;
+    
+        let url = `{{ route('admin.apar.show', ':id') }}`.replace(':id', id);
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (res) {
+                $('#modalBrand').text(res.brand);
+                $('#modalMedia').text(res.media);
+                $('#modalType').text(res.type);
+                $('#modalCapacity').text(res.capacity);
+                $('#modalWarranty').text(res.warranty ?? '-');
+                $('#modalExpired').text(res.expired_date);
+                $('#modalLocation').text(res.location || 'Belum diatur');
+
+                $('#infoModal').modal('show');
+            },
+            error: function () {
+                $('#modalInfoContent').html('<p class="text-danger">Gagal memuat data.</p>');
+                $('#infoModal').modal('show');
+            }
+        });
     });
 
-    // Jika kamu pakai selected dan disabled di <option>, pastikan atur lagi ke situ:
-    form.find('select option[selected]').prop('selected', true);
-  }
-});
-
-
 </script>
+
 <script>
-  let currentAparId = null;
-  
-  $(document).on('click', '.btn-edit', function () {
-      const id = $(this).data('id');
-      currentAparId = id;
-  
-      let url = `{{ route('admin.apar.show', ':id') }}`.replace(':id', id);
-
-      $.ajax({
-          url: url,
-          type: 'GET',
-          success: function (res) {
-            $('#modalBrand').text(res.brand);
-            $('#modalMedia').text(res.media);
-            $('#modalType').text(res.type);
-            $('#modalCapacity').text(res.capacity);
-            $('#modalWarranty').text(res.warranty ?? '-');
-            $('#modalExpired').text(res.expired_date);
-            $('#modalLocation').text(res.location || 'Belum diatur');
-
-            $('#infoModal').modal('show');
-          },
-          error: function () {
-              $('#modalInfoContent').html('<p class="text-danger">Gagal memuat data.</p>');
-              $('#infoModal').modal('show');
-          }
-      });
-  });
-
-  </script>
-<script>
-  $(document).on('click', '#editAparBtn', function () {
-    const id = currentAparId;
-
-    const url = `{{ route('admin.apar.edit', ':id') }}`.replace(':id', id);
-
-    $.ajax({
-      url: url,
-      type: 'GET',
-      success: function (data) {
+    $(document).on('click', '#editAparBtn', function () {
+        const id = currentAparId;
         const form = $('#form-apar');
 
-        // Sesuaikan field yang tersedia dari response
-        form.find('[name="brand"]').val(data.brand);
-        form.find('[name="type"]').val(data.type);
-        form.find('[name="capacity"]').val(data.capacity);
-        form.find('[name="expired_date"]').val(data.expired_date);
-        form.find('[name="location_detail"]').val(data.location_detail);
+        $.ajax({
+            url: `{{ route('admin.apar.edit', ':id') }}`.replace(':id', id),
+            type: 'GET',
+            success: function (data) {
+            // Isi form
+            form.find('[name="brand"]').val(data.brand);
+            form.find('[name="type"]').val(data.type);
+            form.find('[name="capacity"]').val(data.capacity);
+            form.find('[name="expired_date"]').val(data.expired_date);
+            form.find('[name="location_detail"]').val(data.location_detail);
 
-        // Untuk media dan lokasi, karena hanya dikirimkan namanya (bukan ID), kamu bisa:
-        // 1. Cari option <select> yang text-nya sama
-        // 2. Atau ubah controller agar kirimkan juga media_id dan location_id
+            form.find('[name="media_id"]').val(data.media_id);
+            form.find('[name="location_id"]').val(data.location_id);
 
-        // Contoh pendekatan berdasarkan text:
-        form.find('[name="media_id"] option').filter(function () {
-          return $(this).text() === data.media;
-        }).prop('selected', true);
+            // Set method dan action
+            form.attr('action', `/admin/apar/${id}`);
+            $('#methodField').val('PUT');
 
-        form.find('[name="location_id"] option').filter(function () {
-          return $(this).text() === data.location;
-        }).prop('selected', true);
+            // Ubah tampilan
+            $('#modal-apar-label').text('Edit Data APAR');
+            $('#modal-apar button[type="submit"]').text('Update');
 
-        // Form action update
-        form.attr('action', `/admin/apar/${id}`);
-        form.find('input[name="_method"]').remove();
-        form.prepend('<input type="hidden" name="_method" value="PUT">');
-
-        $('#modal-apar-label').text('Edit Data APAR');
-
-        $('#infoModal').modal('hide');
-        setTimeout(() => {
-          $('#modal-apar').modal('show');
-        }, 300);
-      },
-      error: function () {
-        alert('Gagal memuat data untuk diedit.');
-      }
+            $('#infoModal').modal('hide');
+            setTimeout(() => {
+                $('#modal-apar').modal('show');
+            }, 300);
+            },
+            error: function () {
+            alert('Gagal memuat data untuk diedit.');
+            }
+        });
     });
-  });
 </script>
 
   
