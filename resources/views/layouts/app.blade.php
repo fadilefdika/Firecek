@@ -95,7 +95,6 @@
         /* Content */
         .main-content {
             margin-left: 250px;
-            padding: 2rem;
             transition: margin-left 0.3s;
         }
 
@@ -107,10 +106,6 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-        }
 
         .card-header {
             background-color: var(--clean-white);
@@ -207,30 +202,11 @@
 <body>
 
 <!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-    <div class="d-flex justify-content-between align-items-center px-3">
-        <div class="logo d-flex align-items-center">
-            <i class="bi bi-fire-extinguisher"></i>Admin Panel
-        </div>
-        <button class="btn-close-sidebar d-md-none" id="closeSidebar" aria-label="Close">
-            <i class="bi bi-x-lg"></i>
-        </button>
-    </div>
-    <a href="{{ route('admin.apar.index') }}" class="{{ request()->routeIs('admin.apar.index') ? 'active' : '' }}">
-        <i class="bi bi-table"></i> Data APAR
-    </a>
-</div>
-
+@include('layouts.partials.sidebar')
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light navbar-custom">
-    <div class="container-fluid px-0">
-        <button class="hamburger me-3 d-md-none" id="toggleSidebar"><i class="bi bi-list"></i></button>
-        <span class="navbar-text fw-semibold text-dark">
-            @yield('breadcrumb', 'Dashboard')
-        </span>
-    </div>
-</nav>
+@include('layouts.partials.navbar')
+
 
 <!-- Main Content -->
 <div class="main-content" id="main-content">

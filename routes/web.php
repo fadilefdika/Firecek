@@ -17,10 +17,11 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Dashboard (dilindungi oleh middleware 'auth')
 Route::middleware(AdminAuth::class)->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/reports', [AparController::class, 'index'])->name('apar.index');
-    Route::get('/reports/data', [AparController::class, 'getData'])->name('apar.data');
-    Route::get('/reports/export', [AparController::class, 'export'])->name('apar.export');
-    Route::get('/reports/{id}', [AparController::class, 'show'])->name('apar.show');
-    Route::put('/reports/{id}/close', [AparController::class, 'close'])->name('apar.close');
+    Route::get('/apar', [AparController::class, 'index'])->name('apar.index');
+    Route::get('/apar/data', [AparController::class, 'getData'])->name('apar.data');
+    Route::post('/apar/store', [AparController::class, 'store'])->name('apar.store');
+    Route::get('/apar/export', [AparController::class, 'export'])->name('apar.export');
+    Route::get('/apar/{id}', [AparController::class, 'show'])->name('apar.show');
+    Route::put('/apar/{id}/close', [AparController::class, 'close'])->name('apar.close');
     
 });
