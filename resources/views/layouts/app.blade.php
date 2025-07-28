@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-red: #e63946;
+            --light-red: #ffebee;
+            --dark-red: #c62828;
+            --clean-white: #ffffff;
+            --bg-gray: #f8f9fa;
+            --text-dark: #212529;
+            --text-light: #6c757d;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Sidebar - Modern Red */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: var(--clean-white);
+            color: var(--text-dark);
+            padding-top: 1rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            z-index: 1050;
+            transition: transform 0.3s ease;
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .sidebar .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 1.25rem 1.5rem;
+            color: var(--primary-red);
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar .logo i {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+        }
+
+        .sidebar a {
+            color: var(--text-light);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s;
+            margin: 0.25rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+
+        .sidebar .active {
+            background-color: var(--primary-red);
+            color: var(--clean-white) !important;
+        }
+
+        .sidebar a i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        /* Navbar - Clean White */
+        .navbar-custom {
+            margin-left: 250px;
+            background-color: var(--clean-white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 1000;
+            position: sticky;
+            top: 0;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+            transition: margin-left 0.3s;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            background-color: var(--clean-white);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary-red);
+            border-color: var(--primary-red);
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-red);
+            border-color: var(--dark-red);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-red);
+            border-color: var(--primary-red);
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+
+        /* Hamburger Menu for Mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .navbar-custom {
+                margin-left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .hamburger {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .hamburger:hover {
+            background-color: var(--light-red);
+            color: var(--primary-red);
+        }
+
+        /* Form elements */
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 0.25rem rgba(230, 57, 70, 0.25);
+        }
+
+        .btn-close-sidebar {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-right: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .btn-close-sidebar:hover {
+            color: var(--primary-red);
+            background-color: rgba(230, 57, 70, 0.1);
+            border-radius: 8px;
+        }
+
+    </style>
+    @stack('styles')
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="d-flex justify-content-between align-items-center px-3">
+        <div class="logo d-flex align-items-center">
+            <i class="bi bi-fire-extinguisher"></i>Admin Panel
+        </div>
+        <button class="btn-close-sidebar d-md-none" id="closeSidebar" aria-label="Close">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    <a href="{{ route('admin.apar.index') }}" class="{{ request()->routeIs('admin.apar.index') ? 'active' : '' }}">
+        <i class="bi bi-table"></i> Data APAR
+    </a>
+</div>
+
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light navbar-custom">
+    <div class="container-fluid px-0">
+        <button class="hamburger me-3 d-md-none" id="toggleSidebar"><i class="bi bi-list"></i></button>
+        <span class="navbar-text fw-semibold text-dark">
+            @yield('breadcrumb', 'Dashboard')
+        </span>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content" id="main-content">
+    @yield('content')
+</div>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $('#toggleSidebar').on('click', function () {
+        $('#sidebar').addClass('show');
+    });
+
+    $('#closeSidebar').on('click', function () {
+        $('#sidebar').removeClass('show');
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+@stack('scripts')
+</body>
+</html>
