@@ -61,26 +61,27 @@ class InspectionScheduleController extends Controller
 
     public function update(Request $request)
     {
+
         $request->validate([
             'id' => 'required|exists:fc_inspection_schedules,id',
             'title' => 'required|string|max:255',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after_or_equal:start_time',
-            'jenis' => 'required|string',
+            'schedule_type_id' => 'required|exists:fc_schedule_type,id', // ⬅ validasi foreign key
         ]);
 
         $schedule = InspectionSchedule::find($request->id);
 
-        // Update field
         $schedule->title = $request->title;
         $schedule->start_date = date('Y-m-d', strtotime($request->start_time));
         $schedule->start_time = date('H:i:s', strtotime($request->start_time));
         $schedule->end_date = date('Y-m-d', strtotime($request->end_time));
         $schedule->end_time = date('H:i:s', strtotime($request->end_time));
-        $schedule->jenis = $request->jenis;
+        $schedule->schedule_type_id = $request->schedule_type_id; // ⬅ update foreign key
 
         $schedule->save();
 
         return redirect()->back()->with('success', 'Agenda berhasil diperbarui.');
     }
+
 }

@@ -25,7 +25,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Jenis Inspeksi</label>
-                        <select class="form-select" name="type" id="edit_jenis" required>
+                        <select class="form-select" name="schedule_type_id" id="edit_jenis" required>
                             <option value="">-- Pilih Jenis Inspeksi --</option>
                             @foreach ($scheduleTypes as $type)
                                 <option value="{{ $type->id }}">{{ $type->schedule_name }}</option>
