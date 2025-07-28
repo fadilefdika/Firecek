@@ -79,6 +79,7 @@
                             <th>Expired Date</th>
                             <th>Location ID</th>
                             <th>Location Detail</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -88,73 +89,9 @@
 </div>
 @endsection
 
-<!-- Modal -->
-<div class="modal fade" id="modal-apar" tabindex="-1" aria-labelledby="modal-apar-label" aria-hidden="true">
-    <div class="modal-dialog modal-md modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg rounded-3">
-        <div class="modal-header border-0 bg-white px-4 pt-4">
-          <h6 class="modal-title fw-semibold text-gray-800" id="modal-apar-label">Tambah Data APAR</h6>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form id="form-apar" class="needs-validation" method="POST" action="{{ route('admin.apar.store') }}" novalidate>
-          <div class=" px-4 pb-2">
-            @csrf
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Brand<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control form-control-sm rounded-2" name="brand" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Media<span class="text-danger"> *</span></label>
-                <select name="media_id" class="form-select form-select-sm rounded-2" required>
-                  <option value="" disabled selected>-- Select Media --</option>
-                  @foreach ($media as $item)
-                    <option value="{{ $item->id }}">{{ $item->media_name }}</option>
-                  @endforeach
-                </select>
-              </div>              
-              <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Type<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control form-control-sm rounded-2" name="type">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Capacity (kg)<span class="text-danger"> *</span></label>
-                <input type="number" step="0.01" class="form-control form-control-sm rounded-2" name="capacity">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Expired Date<span class="text-danger"> *</span></label>
-                <input type="date" class="form-control form-control-sm rounded-2" name="expired_date">
-              </div>
-              <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Location</label>
-                <select name="location_id" class="form-select form-select-sm rounded-2">
-                  <option value="" disabled selected>-- Select Location --</option>
-                    @foreach ($location as $item)
-                        <option value="{{ $item->id }}">{{ $item->location_name }}</option>
-                    @endforeach
-                </select>
-              </div>
-              <div class="col-12">
-                <label class="form-label small fw-medium text-muted">Location Detail</label>
-                <textarea class="form-control form-control-sm rounded-2" name="location_detail" rows="2"></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer px-4 pb-4 border-0 justify-content-between">
-            <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">
-              Batal
-            </button>
-            <button type="submit" class="btn btn-sm text-white rounded-pill px-4 shadow-sm" style="background-color: #d32f2f;">
-              Simpan
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  
+@include('components.add-modal')  
 
-
+@include('components.info-modal')
 
 
 @push('scripts')
@@ -169,7 +106,6 @@ $(function () {
         processing: true,
         serverSide: true,
         ajax: '{{ route("admin.apar.data") }}',
-        order: [[8, 'desc']], // index 8 = updated_at
         columns: [
             { data: 'id', name: 'id' },
             { data: 'brand', name: 'brand' },
@@ -179,11 +115,108 @@ $(function () {
             { data: 'expired_date', name: 'expired_date' },
             { data: 'location_id', name: 'location_id' }, // gunakan alias dari addColumn
             { data: 'location_detail', name: 'location_detail' },
-            { data: 'updated_at', name: 'updated_at', visible: false },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
         ],
         responsive: true
     });
+
+    $('#apar-table').on('click', '.btn-edit', function () {
+        const apar = $(this).data('apar');
+
+        // Isi modal dengan data
+        $('#form-apar').attr('action', `/admin/apar/${apar.id}`); // update ke route update
+        $('#form-apar input[name="brand"]').val(apar.brand);
+        $('#form-apar select[name="media_id"]').val(apar.media_id);
+        $('#form-apar input[name="type"]').val(apar.type);
+        $('#form-apar input[name="capacity"]').val(apar.capacity);
+        $('#form-apar input[name="expired_date"]').val(apar.expired_date);
+        $('#form-apar select[name="location_id"]').val(apar.location_id);
+        $('#form-apar textarea[name="location_detail"]').val(apar.location_detail);
+
+        // Ganti title modal dan button
+        $('#modal-apar-label').text('Edit Data APAR');
+        $('#modal-apar button[type="submit"]').text('Update');
+
+        // Tampilkan modal
+        $('#modal-apar').modal('show');
+    });
 });
 </script>
+<script>
+  let currentAparId = null;
+  
+  $(document).on('click', '.btn-edit', function () {
+      const id = $(this).data('id');
+      currentAparId = id;
+  
+      let url = `{{ route('admin.apar.show', ':id') }}`.replace(':id', id);
 
+      $.ajax({
+          url: url,
+          type: 'GET',
+          success: function (res) {
+            $('#modalBrand').text(res.brand);
+            $('#modalMedia').text(res.media);
+            $('#modalType').text(res.type);
+            $('#modalCapacity').text(res.capacity);
+            $('#modalWarranty').text(res.warranty ?? '-');
+            $('#modalExpired').text(res.expired_date);
+            $('#modalLocation').text(res.location || 'Belum diatur');
+
+            $('#infoModal').modal('show');
+          },
+          error: function () {
+              $('#modalInfoContent').html('<p class="text-danger">Gagal memuat data.</p>');
+              $('#infoModal').modal('show');
+          }
+      });
+  });
+
+  </script>
+  <script>
+    // Ketika tombol "Edit Informasi APAR" ditekan
+    $(document).on('click', '#editAparBtn', function () {
+      const id = currentAparId;
+  
+      // Ambil data APAR untuk form edit
+      const url = `{{ route('admin.apar.edit', ':id') }}`.replace(':id', id);
+  
+      $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+          const form = $('#form-apar');
+  
+          // Isi form dengan data APAR
+          form.find('[name="brand"]').val(data.brand);
+          form.find('[name="media_id"]').val(data.media_id);
+          form.find('[name="type"]').val(data.type);
+          form.find('[name="capacity"]').val(data.capacity);
+          form.find('[name="expired_date"]').val(data.expired_date);
+          form.find('[name="location_id"]').val(data.location_id);
+          form.find('[name="location_detail"]').val(data.location_detail);
+  
+          // Ganti form action untuk update
+          form.attr('action', `/admin/apar/${data.id}`);
+          form.find('input[name="_method"]').remove(); // pastikan tidak duplikat
+          form.prepend('<input type="hidden" name="_method" value="PUT">');
+  
+          // Ubah judul modal
+          $('#modal-apar-label').text('Edit Data APAR');
+  
+          // Sembunyikan modal info, tampilkan modal edit
+          $('#infoModal').modal('hide');
+          setTimeout(() => {
+            $('#modal-apar').modal('show');
+          }, 300); // beri jeda agar animasi tidak tabrakan
+        },
+        error: function () {
+          alert('Gagal memuat data untuk diedit.');
+        }
+      });
+    });
+  </script>
+  
+
+  
 @endpush

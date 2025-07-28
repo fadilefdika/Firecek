@@ -36,7 +36,7 @@
             top: 0;
             left: 0;
             height: 100%;
-            width: 250px;
+            width: 200px;
             background-color: var(--clean-white);
             color: var(--text-dark);
             padding-top: 1rem;
@@ -87,7 +87,7 @@
 
         /* Navbar - Clean White */
         .navbar-custom {
-            margin-left: 250px;
+            margin-left: 200px;
             background-color: var(--clean-white);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             z-index: 1000;
@@ -99,7 +99,7 @@
 
         /* Content */
         .main-content {
-            margin-left: 250px;
+            margin-left: 200px;
             transition: margin-left 0.3s;
         }
 

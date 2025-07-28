@@ -30,13 +30,14 @@ class AparController extends Controller
         return DataTables::of($data)
             ->addColumn('media_id', fn($row) => $row->media->media_name ?? '-')
             ->addColumn('location_id', fn($row) => $row->location->location_name ?? '-')
-            ->rawColumns(['media_id', 'location_id'])
+            ->addColumn('action', function($row) {
+                return '<button class="btn btn-sm btn-primary btn-edit" data-id="'.$row->id.'">Edit</button>';
+            })
+            ->rawColumns(['media_id', 'location_id', 'action'])
             ->make(true);
     }
 
 
-
-    
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -77,6 +78,49 @@ class AparController extends Controller
             return redirect()->back()->with('error', 'Gagal menambahkan data APAR: ' . $e->getMessage());
         }
     }
+
+    public function show($id)
+    {
+        $apar = Apar::with(['location', 'media'])->findOrFail($id);
+
+        return response()->json([
+            'id' => $apar->id,
+            'brand' => $apar->brand,
+            'media' => $apar->media?->media_name,
+            'type' => $apar->type,
+            'capacity' => $apar->capacity,
+            'expired_date' => $apar->expired_date,
+            'location' => $apar->location?->location_name,
+            'location_detail' => $apar->location_detail,
+        ]);
+        
+    }
+
+    public function edit($id)
+    {
+        $apar = Apar::findOrFail($id);
+
+        return response()->json([
+            'id' => $apar->id,
+            'brand' => $apar->brand,
+            'media_id' => $apar->media_id,
+            'type' => $apar->type,
+            'capacity' => $apar->capacity,
+            'expired_date' => $apar->expired_date,
+            'location_id' => $apar->location_id,
+            'location_detail' => $apar->location_detail,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $apar = Apar::findOrFail($id);
+        $apar->update($request->all());
+
+        return response()->json(['message' => 'APAR updated successfully']);
+    }
+
+
 
     public function showQR($id)
     {
