@@ -12,4 +12,8 @@ class InspectionSchedule extends Model
         'end_date', 'end_time', 'notes'
     ];
     public $timestamps = false; 
+
+    public function typeRelation(){
+        return $this->belongsTo(Schedule::class, 'type');
+    }
 }

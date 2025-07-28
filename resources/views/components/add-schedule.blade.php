@@ -14,10 +14,10 @@
             <div class="mb-3">
                 <label class="form-label">Jenis Inspeksi</label>
                 <select class="form-select" name="type" required>
-                    <option>Pengecekan vendor</option>
-                    <option>Pengecekan sendiri</option>
-                    <option>Isi ulang APAR</option>
-                    <option>Servis</option>
+                    <option value="">-- Pilih Jenis Inspeksi --</option>
+                    @foreach ($scheduleTypes as $type)
+                        <option value="{{ $type->id }}">{{ $type->schedule_name }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="mb-3 row">

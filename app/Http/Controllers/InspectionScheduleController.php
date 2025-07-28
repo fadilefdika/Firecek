@@ -2,33 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InspectionSchedule;
 use Illuminate\Http\Request;
+use App\Models\InspectionSchedule;
+use App\Models\Schedule;
+use Illuminate\Routing\Controller;
 
 class InspectionScheduleController extends Controller
 {
     public function index()
     {
+        // Ambil semua jenis inspeksi
+        $scheduleTypes = Schedule::all();
+
+        // Peta warna berdasarkan nama jenis inspeksi (schedule_name)
         $colorMap = [
-            'pengecekan vendor' => '#f87171',
-            'pengecekan sendiri' => '#60a5fa',
-            'isi ulang apar' => '#34d399',
-            'service' => '#fbbf24',
+            'Check Vendor' => '#f87171',
+            'Check Self' => '#60a5fa',
+            'Refill' => '#34d399',
+            'Service' => '#fbbf24',
         ];
-    
-        $schedules = InspectionSchedule::all()->map(function ($s) use ($colorMap) {
+
+        // Ambil semua agenda + relasi ke jenis
+        $schedules = InspectionSchedule::with('typeRelation')->get()->map(function ($s) use ($colorMap) {
+            $scheduleName = $s->typeRelation->schedule_name ?? 'Unknown';
+
             return [
                 'id' => $s->id,
                 'title' => $s->title,
                 'start' => $s->start_date . 'T' . $s->start_time,
                 'end' => $s->end_date . 'T' . $s->end_time,
-                'color' => $colorMap[$s->jenis] ?? '#9ca3af',
+                'jenis' => $scheduleName,
+                'type_id' => $s->typeRelation->id ?? null, // tambahkan ini
+                'color' => $colorMap[$scheduleName] ?? '#9ca3af',
             ];
+            
         });
-    
-        return view('admin.schedule.index', compact('schedules'));
+
+        return view('admin.schedule.index', compact('schedules', 'scheduleTypes'));
     }
-    
+        
 
     public function store(Request $request)
     {
@@ -50,7 +62,7 @@ class InspectionScheduleController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'id' => 'required|exists:inspection_schedules,id',
+            'id' => 'required|exists:fc_inspection_schedules,id',
             'title' => 'required|string|max:255',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after_or_equal:start_time',

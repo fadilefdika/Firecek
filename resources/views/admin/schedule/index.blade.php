@@ -92,7 +92,7 @@
                 $('#edit_start').val(start);
                 $('#edit_end').val(end);
 
-                $('#edit_jenis').val(event.extendedProps.jenis);
+                $('#edit_jenis').val(event.extendedProps.type_id);
             }
         });
 

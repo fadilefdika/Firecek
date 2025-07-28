@@ -24,14 +24,14 @@
                         <input type="datetime-local" name="end_time" id="edit_end" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="edit_jenis" class="form-label">Jenis Agenda</label>
-                        <select name="jenis" id="edit_jenis" class="form-select" required>
-                            <option value="pengecekan vendor">Pengecekan Vendor</option>
-                            <option value="pengecekan sendiri">Pengecekan Sendiri</option>
-                            <option value="isi ulang apar">Isi Ulang APAR</option>
-                            <option value="service">Service</option>
+                        <label class="form-label">Jenis Inspeksi</label>
+                        <select class="form-select" name="type" id="edit_jenis" required>
+                            <option value="">-- Pilih Jenis Inspeksi --</option>
+                            @foreach ($scheduleTypes as $type)
+                                <option value="{{ $type->id }}">{{ $type->schedule_name }}</option>
+                            @endforeach
                         </select>
-                    </div>
+                    </div>                    
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">💾 Simpan</button>
