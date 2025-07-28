@@ -22,13 +22,23 @@
         font-size: 0.85rem;
         font-weight: 500;
     }
-
-    .dataTables_length select,
     .dataTables_filter input {
         padding: 0.3rem 0.6rem;
         border-radius: 0.375rem;
         border: 1px solid #ccc;
     }
+
+    .dataTables_length select {
+        -webkit-appearance: none; /* untuk Safari/Chrome */
+        -moz-appearance: none;    /* untuk Firefox */
+        appearance: none;         /* untuk standar */
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%204%205'%3E%3Cpath%20fill='black'%20d='M2%205L0%203h4L2%205z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        background-size: 10px;
+        padding-right: 1.5rem;
+    }
+
 
     .dataTables_paginate,
     .dataTables_info {
