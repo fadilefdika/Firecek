@@ -79,7 +79,6 @@
                             <th>Expired Date</th>
                             <th>Location ID</th>
                             <th>Location Detail</th>
-                            <th>Created At</th>
                         </tr>
                     </thead>
                 </table>
@@ -97,33 +96,43 @@
           <h6 class="modal-title fw-semibold text-gray-800" id="modal-apar-label">Tambah Data APAR</h6>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form id="form-apar" class="needs-validation" novalidate>
-          <div class="modal-body px-4 pb-2">
+        <form id="form-apar" class="needs-validation" method="POST" action="{{ route('admin.apar.store') }}" novalidate>
+          <div class=" px-4 pb-2">
             @csrf
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Brand</label>
+                <label class="form-label small fw-medium text-muted">Brand<span class="text-danger"> *</span></label>
                 <input type="text" class="form-control form-control-sm rounded-2" name="brand" required>
               </div>
               <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Media ID</label>
-                <input type="number" class="form-control form-control-sm rounded-2" name="media_id" required>
-              </div>
+                <label class="form-label small fw-medium text-muted">Media<span class="text-danger"> *</span></label>
+                <select name="media_id" class="form-select form-select-sm rounded-2" required>
+                  <option value="" disabled selected>-- Select Media --</option>
+                  @foreach ($media as $item)
+                    <option value="{{ $item->id }}">{{ $item->media_name }}</option>
+                  @endforeach
+                </select>
+              </div>              
               <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Type</label>
+                <label class="form-label small fw-medium text-muted">Type<span class="text-danger"> *</span></label>
                 <input type="text" class="form-control form-control-sm rounded-2" name="type">
               </div>
               <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Capacity (kg)</label>
+                <label class="form-label small fw-medium text-muted">Capacity (kg)<span class="text-danger"> *</span></label>
                 <input type="number" step="0.01" class="form-control form-control-sm rounded-2" name="capacity">
               </div>
               <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Expired Date</label>
+                <label class="form-label small fw-medium text-muted">Expired Date<span class="text-danger"> *</span></label>
                 <input type="date" class="form-control form-control-sm rounded-2" name="expired_date">
               </div>
               <div class="col-md-6">
-                <label class="form-label small fw-medium text-muted">Location ID</label>
-                <input type="number" class="form-control form-control-sm rounded-2" name="location_id" required>
+                <label class="form-label small fw-medium text-muted">Location</label>
+                <select name="location_id" class="form-select form-select-sm rounded-2">
+                  <option value="" disabled selected>-- Select Location --</option>
+                    @foreach ($location as $item)
+                        <option value="{{ $item->id }}">{{ $item->location_name }}</option>
+                    @endforeach
+                </select>
               </div>
               <div class="col-12">
                 <label class="form-label small fw-medium text-muted">Location Detail</label>
@@ -160,40 +169,21 @@ $(function () {
         processing: true,
         serverSide: true,
         ajax: '{{ route("admin.apar.data") }}',
+        order: [[8, 'desc']], // index 8 = updated_at
         columns: [
             { data: 'id', name: 'id' },
             { data: 'brand', name: 'brand' },
-            { data: 'media_id', name: 'media_id' },
+            { data: 'media_id', name: 'media_id' },  // gunakan alias dari addColumn
             { data: 'type', name: 'type' },
             { data: 'capacity', name: 'capacity' },
             { data: 'expired_date', name: 'expired_date' },
-            { data: 'location_id', name: 'location_id' },
+            { data: 'location_id', name: 'location_id' }, // gunakan alias dari addColumn
             { data: 'location_detail', name: 'location_detail' },
-            { data: 'created_at', name: 'created_at' }
+            { data: 'updated_at', name: 'updated_at', visible: false },
         ],
         responsive: true
     });
 });
-</script>
-<script>
-    $('#form-apar').on('submit', function(e) {
-        e.preventDefault();
-        let formData = $(this).serialize();
-
-        $.ajax({
-            url: '{{ route("admin.apar.store") }}',
-            type: 'POST',
-            data: formData,
-            success: function(response) {
-                $('#modal-apar').modal('hide');
-                $('#form-apar')[0].reset();
-                $('#apar-table').DataTable().ajax.reload();
-            },
-            error: function(xhr) {
-                alert('Gagal menyimpan data');
-            }
-        });
-    });
 </script>
 
 @endpush

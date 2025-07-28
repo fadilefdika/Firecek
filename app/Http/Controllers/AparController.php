@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Apar;
+use App\Models\Media;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -15,16 +18,24 @@ class AparController extends Controller
 {
     public function index()
     {
-        return view('admin.apar.index');
+        $media = Media::all();
+        $location= Location::all();
+        return view('admin.apar.index', compact('media','location'));
     }
 
-     public function getData(Request $request)
+    public function getData(Request $request)
     {
-        $data = Apar::query()
-            ->select('id', 'brand', 'media_id', 'type', 'capacity', 'expired_date', 'location_id', 'location_detail', 'created_at');
+        $data = Apar::with(['media', 'location']); // HAPUS ->orderBy()
 
-        return DataTables::of($data)->make(true);
+        return DataTables::of($data)
+            ->addColumn('media_id', fn($row) => $row->media->media_name ?? '-')
+            ->addColumn('location_id', fn($row) => $row->location->location_name ?? '-')
+            ->rawColumns(['media_id', 'location_id'])
+            ->make(true);
     }
+
+
+
     
     public function store(Request $request)
     {
@@ -34,7 +45,7 @@ class AparController extends Controller
             'type' => 'nullable|string|max:50',
             'capacity' => 'nullable|numeric|min:0',
             'expired_date' => 'nullable|date',
-            'location_id' => 'required|integer',
+            'location_id' => 'nullable|integer',
             'location_detail' => 'nullable|string|max:255',
         ]);
 
@@ -62,6 +73,7 @@ class AparController extends Controller
             return redirect()->back()->with('success', 'Data APAR berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::info('Gagal menambahkan data APAR: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal menambahkan data APAR: ' . $e->getMessage());
         }
     }

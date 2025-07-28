@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Media;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Model;
 
 class Apar extends Model
@@ -19,4 +21,15 @@ class Apar extends Model
     ];
 
     public $timestamps = true; // karena kamu punya created_at dan updated_at
+
+    public function media()
+    {
+        return $this->belongsTo(Media::class);
+    }
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
 }
