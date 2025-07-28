@@ -1,25 +1,41 @@
 <!-- Modal Edit -->
-<div class="modal fade" id="modalEdit" tabindex="-1">
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="#{{-- route('schedule.update') --}}" method="POST">
+        <form action="{{ route('admin.schedule.update') }}" method="POST" id="formEditSchedule">
             @csrf
             @method('PUT')
             <input type="hidden" name="id" id="edit_id">
             <div class="modal-content">
-                <div class="modal-header"><h5>Edit Agenda</h5></div>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditLabel">Edit Agenda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
                 <div class="modal-body">
-                    <input type="text" name="title" id="edit_title" class="form-control mb-2" placeholder="Judul">
-                    <input type="datetime-local" name="start_time" id="edit_start" class="form-control mb-2">
-                    <input type="datetime-local" name="end_time" id="edit_end" class="form-control mb-2">
-                    <select name="jenis" id="edit_jenis" class="form-control">
-                        <option value="pengecekan vendor">Pengecekan Vendor</option>
-                        <option value="pengecekan sendiri">Pengecekan Sendiri</option>
-                        <option value="isi ulang apar">Isi Ulang APAR</option>
-                        <option value="service">Service</option>
-                    </select>
+                    <div class="mb-3">
+                        <label for="edit_title" class="form-label">Judul</label>
+                        <input type="text" name="title" id="edit_title" class="form-control" placeholder="Judul agenda" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_start" class="form-label">Waktu Mulai</label>
+                        <input type="datetime-local" name="start_time" id="edit_start" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_end" class="form-label">Waktu Selesai</label>
+                        <input type="datetime-local" name="end_time" id="edit_end" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_jenis" class="form-label">Jenis Agenda</label>
+                        <select name="jenis" id="edit_jenis" class="form-select" required>
+                            <option value="pengecekan vendor">Pengecekan Vendor</option>
+                            <option value="pengecekan sendiri">Pengecekan Sendiri</option>
+                            <option value="isi ulang apar">Isi Ulang APAR</option>
+                            <option value="service">Service</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary">💾 Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                 </div>
             </div>
         </form>
