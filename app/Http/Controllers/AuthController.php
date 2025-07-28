@@ -44,8 +44,8 @@ class AuthController extends Controller
             return back()->withErrors(['Username atau password salah.']);
         }
     
-        Auth::login($user);
-        return redirect()->route('admin.reports.index');
+        Auth::guard('admin')->login($user);
+        return redirect()->route('admin.apar.index');
     }
     
         

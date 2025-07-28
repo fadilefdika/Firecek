@@ -12,11 +12,10 @@ class AdminAuth
 {
     public function handle($request, Closure $next)
     {
-        if (!Auth::check()) {
-            return redirect()->route('admin.login');
+        if (!Auth::guard('admin')->check()) {
+            return redirect()->route('login');
         }
 
         return $next($request);
     }
-
 }

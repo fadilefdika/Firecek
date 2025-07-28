@@ -30,7 +30,6 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
-        /* Sidebar - Modern Red */
         .sidebar {
             position: fixed;
             top: 0;
@@ -39,17 +38,18 @@
             width: 200px;
             background-color: var(--clean-white);
             color: var(--text-dark);
-            padding-top: 1rem;
+            padding-top: 0.5rem;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
             z-index: 1050;
             transition: transform 0.3s ease;
             border-right: 1px solid rgba(0,0,0,0.05);
+            font-size: 13px; /* Ukuran font keseluruhan sidebar */
         }
 
         .sidebar .logo {
-            font-size: 1.25rem;
+            font-size: 13px;
             font-weight: 600;
-            padding: 1.25rem 1.5rem;
+            padding: 0.75rem 1rem;
             color: var(--primary-red);
             text-align: left;
             border-bottom: 1px solid rgba(0,0,0,0.05);
@@ -58,8 +58,8 @@
         }
 
         .sidebar .logo i {
-            font-size: 1.5rem;
-            margin-right: 0.75rem;
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
         }
 
         .sidebar a {
@@ -67,13 +67,16 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             transition: all 0.2s;
             margin: 0.25rem 1rem;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: 500;
+            font-size: 11px;
+            white-space: nowrap; /* Hindari wrapping */
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
 
         .sidebar .active {
             background-color: var(--primary-red);
@@ -81,8 +84,8 @@
         }
 
         .sidebar a i {
-            margin-right: 0.75rem;
-            font-size: 1.1rem;
+            margin-right: 0.5rem;
+            font-size: 11px;
         }
 
         /* Navbar - Clean White */
