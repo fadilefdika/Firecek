@@ -143,6 +143,27 @@ $(function () {
 });
 </script>
 <script>
+  $('#modal-apar').on('show.bs.modal', function (e) {
+  const form = $('#form-apar');
+  const mode = form.data('mode'); // Bisa create/edit
+
+  // Jika mode create (Tambah Data), kosongkan semua input
+  if (mode === 'create') {
+    form.trigger('reset');
+
+    // Reset dropdowns ke default (pilihan pertama)
+    form.find('select').each(function () {
+      $(this).val('').trigger('change');
+    });
+
+    // Jika kamu pakai selected dan disabled di <option>, pastikan atur lagi ke situ:
+    form.find('select option[selected]').prop('selected', true);
+  }
+});
+
+
+</script>
+<script>
   let currentAparId = null;
   
   $(document).on('click', '.btn-edit', function () {
@@ -173,49 +194,57 @@ $(function () {
   });
 
   </script>
-  <script>
-    // Ketika tombol "Edit Informasi APAR" ditekan
-    $(document).on('click', '#editAparBtn', function () {
-      const id = currentAparId;
-  
-      // Ambil data APAR untuk form edit
-      const url = `{{ route('admin.apar.edit', ':id') }}`.replace(':id', id);
-  
-      $.ajax({
-        url: url,
-        type: 'GET',
-        success: function (data) {
-          const form = $('#form-apar');
-  
-          // Isi form dengan data APAR
-          form.find('[name="brand"]').val(data.brand);
-          form.find('[name="media_id"]').val(data.media_id);
-          form.find('[name="type"]').val(data.type);
-          form.find('[name="capacity"]').val(data.capacity);
-          form.find('[name="expired_date"]').val(data.expired_date);
-          form.find('[name="location_id"]').val(data.location_id);
-          form.find('[name="location_detail"]').val(data.location_detail);
-  
-          // Ganti form action untuk update
-          form.attr('action', `/admin/apar/${data.id}`);
-          form.find('input[name="_method"]').remove(); // pastikan tidak duplikat
-          form.prepend('<input type="hidden" name="_method" value="PUT">');
-  
-          // Ubah judul modal
-          $('#modal-apar-label').text('Edit Data APAR');
-  
-          // Sembunyikan modal info, tampilkan modal edit
-          $('#infoModal').modal('hide');
-          setTimeout(() => {
-            $('#modal-apar').modal('show');
-          }, 300); // beri jeda agar animasi tidak tabrakan
-        },
-        error: function () {
-          alert('Gagal memuat data untuk diedit.');
-        }
-      });
+<script>
+  $(document).on('click', '#editAparBtn', function () {
+    const id = currentAparId;
+
+    const url = `{{ route('admin.apar.edit', ':id') }}`.replace(':id', id);
+
+    $.ajax({
+      url: url,
+      type: 'GET',
+      success: function (data) {
+        const form = $('#form-apar');
+
+        // Sesuaikan field yang tersedia dari response
+        form.find('[name="brand"]').val(data.brand);
+        form.find('[name="type"]').val(data.type);
+        form.find('[name="capacity"]').val(data.capacity);
+        form.find('[name="expired_date"]').val(data.expired_date);
+        form.find('[name="location_detail"]').val(data.location_detail);
+
+        // Untuk media dan lokasi, karena hanya dikirimkan namanya (bukan ID), kamu bisa:
+        // 1. Cari option <select> yang text-nya sama
+        // 2. Atau ubah controller agar kirimkan juga media_id dan location_id
+
+        // Contoh pendekatan berdasarkan text:
+        form.find('[name="media_id"] option').filter(function () {
+          return $(this).text() === data.media;
+        }).prop('selected', true);
+
+        form.find('[name="location_id"] option').filter(function () {
+          return $(this).text() === data.location;
+        }).prop('selected', true);
+
+        // Form action update
+        form.attr('action', `/admin/apar/${id}`);
+        form.find('input[name="_method"]').remove();
+        form.prepend('<input type="hidden" name="_method" value="PUT">');
+
+        $('#modal-apar-label').text('Edit Data APAR');
+
+        $('#infoModal').modal('hide');
+        setTimeout(() => {
+          $('#modal-apar').modal('show');
+        }, 300);
+      },
+      error: function () {
+        alert('Gagal memuat data untuk diedit.');
+      }
     });
-  </script>
+  });
+</script>
+
   
 
   

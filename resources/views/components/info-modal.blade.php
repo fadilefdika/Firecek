@@ -24,7 +24,9 @@
               ✅ QR terverifikasi
             </div>
             <div class="d-grid gap-2">
-              <button class="btn btn-primary" id="editAparBtn">Edit Informasi APAR</button>
+                <button class="btn btn-primary" id="editAparBtn" data-bs-toggle="modal" data-bs-target="#modal-apar">
+                    Edit Informasi APAR
+                </button>
               <div class="d-flex justify-content-center gap-2 mt-2">
                 <button class="btn btn-outline-primary">Atur Lokasi</button>
                 <button class="btn btn-outline-secondary">Cek APAR</button>

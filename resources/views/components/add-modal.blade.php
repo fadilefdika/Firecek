@@ -6,7 +6,7 @@
           <h6 class="modal-title fw-semibold text-gray-800" id="modal-apar-label">Tambah Data APAR</h6>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form id="form-apar" method="POST">
+        <form id="form-apar" method="POST" data-mode="create">
             @csrf
             @method('POST')
           <div class=" px-4 pb-2">
