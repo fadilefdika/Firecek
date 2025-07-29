@@ -17,11 +17,31 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class AparController extends Controller
 {
     public function index()
-    {
-        $media = Media::all();
-        $location= Location::all();
-        return view('admin.apar.index', compact('media','location'));
-    }
+{
+    $media = Media::all();
+    $location = Location::all();
+
+    $totalApar = Apar::count();
+    // $belumDigunakan = Apar::where('status', 'belum_digunakan')->count();
+    // $digunakan = Apar::where('status', 'digunakan')->count();
+
+    $jumlahMedia = Apar::select('media_id')->distinct()->count();
+    $jumlahBrand = Apar::select('brand')->distinct()->count();
+    $jumlahLokasi = Apar::select('location_id')->distinct()->count();
+    $jumlahTipe = Apar::select('type')->distinct()->count();
+
+    return view('admin.apar.index', compact(
+        'media',
+        'location',
+        'totalApar',
+        // 'belumDigunakan',
+        // 'digunakan',
+        'jumlahMedia',
+        'jumlahBrand',
+        'jumlahLokasi',
+        'jumlahTipe'
+    ));
+}
 
     public function getData(Request $request)
     {

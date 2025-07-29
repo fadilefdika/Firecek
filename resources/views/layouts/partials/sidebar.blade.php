@@ -12,7 +12,7 @@
     <a href="{{ route('admin.apar.index') }}"
        class="{{ request()->routeIs('admin.apar.index') ? 'active' : '' }}">
         <i class="bi bi-table me-2"></i>
-        <span>Data APAR</span>
+        <span>Inventory</span>
     </a>
 
     <a href="{{ route('admin.schedule.index') }}"
