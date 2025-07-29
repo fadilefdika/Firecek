@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Media extends Model
 {
     protected $table = 'fc_media';
+
+    public $timestamps = false;
+
+    protected $fillable = ['nama']; 
 }

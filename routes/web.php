@@ -1,12 +1,15 @@
 <?php
 
+use App\Models\Schedule;
 use App\Http\Middleware\AdminAuth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AparController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\InspectionScheduleController;
+use App\Http\Controllers\MediaController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ScheduleController;
-use App\Models\Schedule;
+use App\Http\Controllers\ScheduleTypeController;
+use App\Http\Controllers\InspectionScheduleController;
 
 // Landing page
 Route::get('/', function () {
@@ -36,5 +39,9 @@ Route::middleware(AdminAuth::class)->prefix('admin')->name('admin.')->group(func
     Route::post('/schedule', [InspectionScheduleController::class, 'store'])->name('schedule.store');
     Route::put('/schedule/update', [InspectionScheduleController::class, 'update'])->name('schedule.update');
 
+    Route::get('media-data', [MediaController::class, 'getData'])->name('media.data');
+    Route::resource('media', MediaController::class);
+    Route::resource('location', LocationController::class);
+    Route::resource('schedule-type', ScheduleTypeController::class);
     
 });

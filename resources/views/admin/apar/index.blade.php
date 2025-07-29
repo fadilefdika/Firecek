@@ -126,7 +126,7 @@
                 <table id="apar-table" class="table table-striped table-hover align-middle nowrap w-100">
                     <thead class="text-center">
                         <tr>
-                            <th>ID</th>
+                            <th>No</th>
                             <th>Brand</th>
                             <th>Media</th>
                             <th>Type</th>
@@ -150,10 +150,6 @@
 
 
 @push('scripts')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <script>
 $(function () {
@@ -162,7 +158,15 @@ $(function () {
         serverSide: true,
         ajax: '{{ route("admin.apar.data") }}',
         columns: [
-            { data: 'id', name: 'id' },
+            { 
+                data: null, 
+                name: 'no', 
+                orderable: false, 
+                searchable: false, 
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
             { data: 'brand', name: 'brand' },
             { data: 'media_id', name: 'media_id' },  // gunakan alias dari addColumn
             { data: 'type', name: 'type' },
