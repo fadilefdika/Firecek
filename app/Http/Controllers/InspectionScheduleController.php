@@ -59,6 +59,12 @@ class InspectionScheduleController extends Controller
         return redirect()->route('admin.schedule.index')->with('success', 'Agenda berhasil disimpan.');
     }
 
+    public function show($id){
+        $schedule = InspectionSchedule::with(['aparInspections', 'typeRelation'])->findOrFail($id);
+
+        return view('admin.schedule.show', compact('schedule'));
+    }
+
     public function update(Request $request)
     {
 

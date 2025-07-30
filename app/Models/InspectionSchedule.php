@@ -19,5 +19,11 @@ class InspectionSchedule extends Model
     {
         return $this->belongsTo(Schedule::class, 'schedule_type_id'); // ⬅ foreign key baru
     }
+
+        public function aparInspections()
+    {
+        return $this->hasMany(AparInspection::class, 'inspection_schedule_id');
+    }
+
 }
 

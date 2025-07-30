@@ -80,19 +80,9 @@
             height: "auto",
             eventClick: function(info) {
                 const event = info.event;
-                $('#modalEdit').modal('show');
 
-                // Isi form
-                $('#edit_id').val(event.id);
-                $('#edit_title').val(event.title);
-
-                // Format datetime-local: potong sampai menit
-                const start = event.startStr ? event.startStr.slice(0, 16) : '';
-                const end = event.endStr ? event.endStr.slice(0, 16) : '';
-                $('#edit_start').val(start);
-                $('#edit_end').val(end);
-
-                $('#edit_jenis').val(event.extendedProps.type_id);
+                // Arahkan ke halaman detail agenda berdasarkan ID event
+                window.location.href = `/admin/schedule/${event.id}`;
             }
         });
 
