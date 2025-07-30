@@ -52,7 +52,8 @@ class AparController extends Controller
             ->addColumn('location_id', fn($row) => $row->location->location_name ?? '-')
             ->addColumn('location_detail', fn($row) => $row->location_detail ?? '-')
             ->addColumn('action', function($row) {
-                return '<button class="btn btn-sm btn-primary btn-detail" data-id="'.$row->id.'">Detail</button>';
+                $url = route('admin.apar.show', $row->id);
+                return '<a href="' . $url . '" class="btn btn-sm btn-info text-white btn-detail">Detail</a>';
             })
             ->rawColumns(['media_id', 'location_id', 'action'])
             ->make(true);
@@ -102,19 +103,9 @@ class AparController extends Controller
 
     public function show($id)
     {
-        $apar = Apar::with(['location', 'media'])->findOrFail($id);
-
-        return response()->json([
-            'id' => $apar->id,
-            'brand' => $apar->brand,
-            'media' => $apar->media?->media_name,
-            'type' => $apar->type,
-            'capacity' => $apar->capacity,
-            'expired_date' => $apar->expired_date,
-            'location' => $apar->location?->location_name,
-            'location_detail' => $apar->location_detail,
-        ]);
+        $apar = Apar::with(['location', 'media'])->findOrFail($id); 
         
+        return view('admin.apar.show', compact('apar'));
     }
 
     public function edit($id)

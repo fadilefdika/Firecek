@@ -66,50 +66,6 @@
 
 @section('content')
 <div class="container-fluid py-3">
-    {{-- <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-start border-danger border-4">
-                <div class="card-body">
-                    <h6 class="text-muted mb-1">Total APAR</h6>
-                    <h4>{{ $totalApar }}</h4>
-                    <small class="text-success">Belum digunakan: </small><br>
-                    <small class="text-danger">Digunakan: </small>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="card shadow-sm border-start border-primary border-4">
-                <div class="card-body">
-                    <h6 class="text-muted mb-1">Media</h6>
-                    <h4>{{ $jumlahMedia }}</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="card shadow-sm border-start border-info border-4">
-                <div class="card-body">
-                    <h6 class="text-muted mb-1">Brand</h6>
-                    <h4>{{ $jumlahBrand }}</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="card shadow-sm border-start border-warning border-4">
-                <div class="card-body">
-                    <h6 class="text-muted mb-1">Lokasi</h6>
-                    <h4>{{ $jumlahLokasi }}</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="card shadow-sm border-start border-success border-4">
-                <div class="card-body">
-                    <h6 class="text-muted mb-1">Tipe</h6>
-                    <h4>{{ $jumlahTipe }}</h4>
-                </div>
-            </div>
-        </div>
-    </div> --}}
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center">
             <div>
@@ -214,38 +170,6 @@ $(function () {
         });
     }
     });
-</script>
-
-<script>
-    let currentAparId = null;
-    
-    $(document).on('click', '.btn-detail', function () {
-        const id = $(this).data('id');
-        currentAparId = id;
-    
-        let url = `{{ route('admin.apar.show', ':id') }}`.replace(':id', id);
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function (res) {
-                $('#modalBrand').text(res.brand);
-                $('#modalMedia').text(res.media);
-                $('#modalType').text(res.type);
-                $('#modalCapacity').text(res.capacity);
-                $('#modalWarranty').text(res.warranty ?? '-');
-                $('#modalExpired').text(res.expired_date);
-                $('#modalLocation').text(res.location || 'Belum diatur');
-
-                $('#infoModal').modal('show');
-            },
-            error: function () {
-                $('#modalInfoContent').html('<p class="text-danger">Gagal memuat data.</p>');
-                $('#infoModal').modal('show');
-            }
-        });
-    });
-
 </script>
 
 <script>

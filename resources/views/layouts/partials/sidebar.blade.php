@@ -1,3 +1,18 @@
+@push('styles')
+<style>
+    .sidebar .nav-link:hover {
+        color: #343a40 !important; /* ubah warna sesuai keinginan, misalnya abu-abu tua */
+        background-color: transparent !important; /* hilangkan efek latar jika ada */
+    }
+
+    .sidebar .nav-link.active {
+        color: #fff !important;
+        background-color: #0d6efd !important; /* contoh: warna biru Bootstrap */
+    }
+</style>
+
+@endpush
+
 <nav class="sidebar" id="sidebar">
     {{-- Header Sidebar --}}
     <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
