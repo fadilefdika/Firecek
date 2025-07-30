@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Models\InspectionSchedule;
-use App\Models\Schedule;
 use Illuminate\Routing\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class InspectionScheduleController extends Controller
 {
@@ -63,6 +64,27 @@ class InspectionScheduleController extends Controller
         $schedule = InspectionSchedule::with(['aparInspections', 'typeRelation'])->findOrFail($id);
 
         return view('admin.schedule.show', compact('schedule'));
+    }
+
+    public function getInspections($scheduleId)
+    {
+        $schedule = InspectionSchedule::with('aparInspections.apar.location', 'aparInspections.apar.media')->findOrFail($scheduleId);
+
+        $inspections = $schedule->aparInspections;
+
+        return DataTables::of($inspections)
+            ->addColumn('lokasi', fn($i) => $i->apar->location->location_name)
+            ->addColumn('detail', fn($i) => $i->apar->location_detail)
+            ->addColumn('brand', fn($i) => $i->apar->brand)
+            ->addColumn('media', fn($i) => $i->apar->media->media_name)
+            ->addColumn('status', function ($i) {
+                return $i->is_checked
+                    ? '<span class="badge bg-success bg-opacity-10 text-success">✓ Selesai</span>'
+                    : '<span class="badge bg-warning bg-opacity-10 text-warning">Belum</span>';
+            })
+            ->addColumn('note', fn($i) => $i->note ?? '-')
+            ->rawColumns(['status']) // agar HTML badge dirender
+            ->make(true);
     }
 
     public function update(Request $request)

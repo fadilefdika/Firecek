@@ -17,4 +17,9 @@ class AparInspection extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function apar()
+    {
+        return $this->belongsTo(Apar::class);
+    }
 }

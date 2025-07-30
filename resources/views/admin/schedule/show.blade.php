@@ -68,8 +68,8 @@
                 </h6>
             </div>
             
-            <div class="overflow-auto">
-                <table class="table mb-0">
+            <div class="overflow-auto p-3">
+                <table class="table mb-0" id="inspections-table">
                     <thead>
                         <tr class="text-muted small">
                             <th class="border-0 ps-4">Lokasi</th>
@@ -80,33 +80,44 @@
                             <th class="border-0 pe-4">Catatan</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @forelse ($schedule->aparInspections as $inspection)
-                            <tr class="border-top">
-                                <td class="ps-4">{{ $inspection->apar->location->location_name }}</td>
-                                <td>{{ $inspection->apar->location_detail }}</td>
-                                <td>{{ $inspection->apar->brand }}</td>
-                                <td>{{ $inspection->apar->media->media_name }}</td>
-                                <td>
-                                    @if ($inspection->is_checked)
-                                        <span class="badge bg-success bg-opacity-10 text-success">✓ Selesai</span>
-                                    @else
-                                        <span class="badge bg-warning bg-opacity-10 text-warning">Belum</span>
-                                    @endif
-                                </td>
-                                <td class="pe-4 text-muted">{{ $inspection->note ?? '-' }}</td>
-                            </tr>
-                        @empty
-                            <tr class="border-top">
-                                <td colspan="6" class="text-center py-4 text-muted">
-                                    <i class="fas fa-inbox me-2"></i> Belum ada data inspeksi
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
                 </table>
             </div>
+            
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function () {
+    $('#inspections-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route("admin.schedule.inspections", $schedule->id) }}',
+        columns: [
+            { data: 'lokasi', name: 'lokasi', className: 'ps-4' },
+            { data: 'detail', name: 'detail' },
+            { data: 'brand', name: 'brand' },
+            { data: 'media', name: 'media' },
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'note', name: 'note', className: 'pe-4 text-muted' },
+        ],
+        language: {
+            lengthMenu: 'Tampilkan _MENU_ entri',
+            zeroRecords: 'Tidak ada data ditemukan',
+            info: 'Menampilkan _START_ - _END_ dari _TOTAL_ entri',
+            infoEmpty: 'Tidak ada entri tersedia',
+            infoFiltered: '(disaring dari _MAX_ total entri)',
+            search: 'Cari:',
+            paginate: {
+                next: 'Berikutnya',
+                previous: 'Sebelumnya'
+            }
+        },
+        pageLength: 10
+    });
+});
+</script>
+@endpush
+

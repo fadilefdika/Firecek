@@ -41,6 +41,8 @@ Route::middleware(AdminAuth::class)->prefix('admin')->name('admin.')->group(func
     Route::get('/schedule', [InspectionScheduleController::class, 'index'])->name('schedule.index');
     Route::post('/schedule', [InspectionScheduleController::class, 'store'])->name('schedule.store');
     Route::get('/schedule/{id}', [InspectionScheduleController::class, 'show'])->name('schedule.show');
+    Route::get('/schedule/{schedule}/inspections/json', [InspectionScheduleController::class, 'getInspections'])->name('schedule.inspections');
+
 
     Route::put('/schedule/update', [InspectionScheduleController::class, 'update'])->name('schedule.update');
 

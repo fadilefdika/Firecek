@@ -19,7 +19,7 @@
                 <button class="btn btn-sm btn-outline-primary"
                         data-bs-toggle="modal"
                         data-bs-target="#editAparModal">
-                    <i class="fas fa-edit me-1"></i> Edit
+                    <i class="fas fa-edit me-1"></i>Edit
                 </button>
             </div>
         </div>
@@ -100,6 +100,7 @@
 </div>
 
 @include('components.edit-apar')
+
 @include('components.inspection-checklist', ['questions' => $questions])
 
 @endsection
