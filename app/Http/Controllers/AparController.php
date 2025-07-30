@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\InspectionQuestion;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -104,8 +105,15 @@ class AparController extends Controller
     public function show($id)
     {
         $apar = Apar::with(['location', 'media'])->findOrFail($id); 
-        
-        return view('admin.apar.show', compact('apar'));
+        $medias = Media::all();
+        $locations = Location::all();
+
+        // Ambil pertanyaan berdasarkan media
+        $questions = InspectionQuestion::with('options')
+            ->where('media_id', $apar->media_id)
+            ->get();
+
+        return view('admin.apar.show', compact('apar', 'medias', 'locations', 'questions'));
     }
 
     public function edit($id)
@@ -132,13 +140,25 @@ class AparController extends Controller
         return redirect()->back()->with('success', 'Data APAR berhasil diupdate.');
     }
 
-
-
-    public function showQR($id)
+    public function generateQrCode($id)
     {
-        $apar = DB::selectOne("SELECT * FROM apar WHERE id = ?", [$id]);
-        $qr = QrCode::size(200)->generate(route('apar.detail', $apar->id));
-        return view('apar.qr', compact('qr'));
+        $apar = Apar::findOrFail($id);
+
+        $url = route('admin.apar.show', $apar->id); // URL menuju halaman detail
+
+        return QrCode::size(300)->generate($url);
+    }
+
+
+    public function showQr($id)
+    {
+        $apar = Apar::findOrFail($id);
+        $url = route('admin.apar.show', $apar->id);
+
+        return view('admin.apar.qrcode', [
+            'qr' => QrCode::size(200)->generate($url), // 200 px = 2 cm saat print
+            'apar' => $apar,
+        ]);
     }
 
 

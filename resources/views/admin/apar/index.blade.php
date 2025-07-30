@@ -102,9 +102,6 @@
 
 @include('components.add-modal')  
 
-@include('components.info-modal')
-
-
 @push('scripts')
 
 <script>
@@ -172,46 +169,4 @@ $(function () {
     });
 </script>
 
-<script>
-    $(document).on('click', '#editAparBtn', function () {
-        const id = currentAparId;
-        const form = $('#form-apar');
-
-        $.ajax({
-            url: `{{ route('admin.apar.edit', ':id') }}`.replace(':id', id),
-            type: 'GET',
-            success: function (data) {
-            // Isi form
-            form.find('[name="brand"]').val(data.brand);
-            form.find('[name="type"]').val(data.type);
-            form.find('[name="capacity"]').val(data.capacity);
-            form.find('[name="expired_date"]').val(data.expired_date);
-            form.find('[name="location_detail"]').val(data.location_detail);
-
-            form.find('[name="media_id"]').val(data.media_id);
-            form.find('[name="location_id"]').val(data.location_id);
-
-            // Set method dan action
-            form.attr('action', `/admin/apar/${id}`);
-            $('#methodField').val('PUT');
-
-            // Ubah tampilan
-            $('#modal-apar-label').text('Edit Data APAR');
-            $('#modal-apar button[type="submit"]').text('Update');
-
-            $('#infoModal').modal('hide');
-            setTimeout(() => {
-                $('#modal-apar').modal('show');
-            }, 300);
-            },
-            error: function () {
-            alert('Gagal memuat data untuk diedit.');
-            }
-        });
-    });
-</script>
-
-  
-
-  
 @endpush

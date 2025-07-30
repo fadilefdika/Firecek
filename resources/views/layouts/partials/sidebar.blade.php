@@ -31,7 +31,7 @@
         {{-- Inventory --}}
         <li class="nav-item">
             <a href="{{ route('admin.apar.index') }}"
-               class="nav-link d-flex align-items-center {{ request()->routeIs('admin.apar.index') ? 'active' : '' }}">
+            class="nav-link d-flex align-items-center {{ request()->routeIs('admin.apar.*') ? 'active' : '' }}">
                 <i class="bi bi-table me-2"></i>
                 <span>Inventory</span>
             </a>
@@ -40,7 +40,7 @@
         {{-- Schedule --}}
         <li class="nav-item">
             <a href="{{ route('admin.schedule.index') }}"
-               class="nav-link d-flex align-items-center {{ request()->routeIs('admin.schedule.index') ? 'active' : '' }}">
+               class="nav-link d-flex align-items-center {{ request()->routeIs('admin.schedule.*') ? 'active' : '' }}">
                 <i class="bi bi-calendar-event me-2"></i>
                 <span>Schedule</span>
             </a>
