@@ -84,7 +84,7 @@
 
             <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center flex-wrap">
                 <div class="small text-muted">
-                    <i class="fas fa-clock me-1"></i> Terakhir diperbarui: {{ $apar->updated_at->format('d M Y H:i') }}
+                    <i class="fas fa-clock me-1"></i>
                 </div>
             
                 <div class="mt-2 mt-md-0">
@@ -101,7 +101,13 @@
 
 @include('components.edit-apar')
 
-@include('components.inspection-checklist', ['questions' => $questions])
+@if($apar->aparInspections->isNotEmpty())
+    @include('components.inspection-checklist', ['questions' => $questions])
+@else
+    <div class="alert alert-info">
+        Belum ada jadwal inspeksi untuk APAR ini.
+    </div>
+@endif
 
 @endsection
 

@@ -6,8 +6,10 @@ use App\Models\Apar;
 use App\Models\Media;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use App\Models\AparInspection;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\InspectionQuestion;
+use App\Models\InspectionSchedule;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -46,17 +48,22 @@ class AparController extends Controller
 
     public function getData(Request $request)
     {
-        $data = Apar::with(['media', 'location']); // HAPUS ->orderBy()
+        $data = Apar::with(['media', 'location'])->select('fc_apar.*');
 
         return DataTables::of($data)
-            ->addColumn('media_id', fn($row) => $row->media->media_name ?? '-')
-            ->addColumn('location_id', fn($row) => $row->location->location_name ?? '-')
+            ->addColumn('media_id', fn($row) => optional($row->media)->media_name ?? '-')
+            ->addColumn('location_id', fn($row) => optional($row->location)->location_name ?? '-')
             ->addColumn('location_detail', fn($row) => $row->location_detail ?? '-')
-            ->addColumn('action', function($row) {
+            ->addColumn('expired_date', function ($row) {
+                return $row->expired_date 
+                    ? \Carbon\Carbon::parse($row->expired_date)->translatedFormat('d F Y') 
+                    : '-';
+            })            
+            ->addColumn('action', function ($row) {
                 $url = route('admin.apar.show', $row->id);
-                return '<a href="' . $url . '" class="btn btn-sm btn-info text-white btn-detail">Detail</a>';
+                return '<a href="' . $url . '" class="btn btn-sm btn-danger text-white btn-detail">Detail</a>';
             })
-            ->rawColumns(['media_id', 'location_id', 'action'])
+            ->rawColumns(['action'])
             ->make(true);
     }
 
@@ -142,6 +149,26 @@ class AparController extends Controller
         $apar->update($request->all());
 
         return redirect()->back()->with('success', 'Data APAR berhasil diupdate.');
+    }
+
+    public function checklist($id, $inspection_schedule_id)
+    {
+        $apar = Apar::findOrFail($id);
+
+        // Ambil pertanyaan berdasarkan media_id dari APAR
+        $questions = InspectionQuestion::with('options')
+            ->where('media_id', $apar->media_id)
+            ->get();
+
+        $inspection = InspectionSchedule::findOrFail($inspection_schedule_id);
+
+        return view('admin.apar.checklist', [
+            'questions' => $questions,
+            'inspection' => $inspection,
+            'apar' => $apar,
+            'aparId' => $id,
+            'scheduleId' => $inspection_schedule_id,
+        ]);
     }
 
     public function generateQrCode($id)

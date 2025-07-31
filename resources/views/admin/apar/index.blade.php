@@ -88,7 +88,7 @@
                             <th>Type</th>
                             <th>Capacity (kg)</th>
                             <th>Expired Date</th>
-                            <th>Location ID</th>
+                            <th>Location </th>
                             <th>Location Detail</th>
                             <th>Action</th>
                         </tr>

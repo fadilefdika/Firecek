@@ -29,6 +29,7 @@ Route::middleware(AdminAuth::class)->prefix('admin')->name('admin.')->group(func
     Route::put('/apar/{id}', [AparController::class, 'update'])->name('apar.update');
     Route::get('/apar/{id}/edit', [AparController::class, 'edit'])->name('apar.edit');
     Route::get('/apar/{id}', [AparController::class, 'show'])->name('apar.show');
+    Route::get('/apar/{id}/cheklist/{inspection_schedule_id}', [AparController::class, 'checklist'])->name('apar.checklist');
     
     
     Route::get('/apar/export', [AparController::class, 'export'])->name('apar.export');
@@ -40,6 +41,7 @@ Route::middleware(AdminAuth::class)->prefix('admin')->name('admin.')->group(func
 
     Route::get('/schedule', [InspectionScheduleController::class, 'index'])->name('schedule.index');
     Route::post('/schedule', [InspectionScheduleController::class, 'store'])->name('schedule.store');
+    // Route::post('/schedule/checklist', [InspectionScheduleController::class, 'checklist'])->name('schedule.checklist');
     Route::get('/schedule/{id}', [InspectionScheduleController::class, 'show'])->name('schedule.show');
     Route::get('/schedule/{schedule}/inspections/json', [InspectionScheduleController::class, 'getInspections'])->name('schedule.inspections');
 

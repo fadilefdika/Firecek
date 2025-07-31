@@ -12,4 +12,9 @@ class InspectionQuestionOption extends Model
         'inspection_question_id',
         'option_text',
     ];
+
+    public function question()
+    {
+        return $this->belongsTo(InspectionQuestion::class);
+    }
 }

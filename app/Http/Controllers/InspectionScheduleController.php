@@ -45,7 +45,11 @@ class InspectionScheduleController extends Controller
 
         return view('admin.schedule.index', compact('schedules', 'scheduleTypes'));
     }
-        
+    
+    // public function checklist(Request $request){
+    //     $scheduleId = $request->input('schedule_id');
+    //     return view('admin.schedule.checklist', compact('scheduleId'));
+    // }
 
     public function store(Request $request)
     {
