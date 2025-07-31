@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Apar;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
+use App\Models\AparInspection;
 use App\Models\InspectionSchedule;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class InspectionScheduleController extends Controller
@@ -55,9 +59,50 @@ class InspectionScheduleController extends Controller
             'notes' => 'nullable'
         ]);
 
-        InspectionSchedule::create($request->all());
+        DB::beginTransaction();
 
-        return redirect()->route('admin.schedule.index')->with('success', 'Agenda berhasil disimpan.');
+        try {
+            // Simpan agenda inspeksi
+            $schedule = InspectionSchedule::create([
+                'title' => $request->title,
+                'schedule_type_id' => $request->type,
+                'start_date' => $request->start_date,
+                'start_time' => $request->start_time,
+                'end_date' => $request->end_date,
+                'end_time' => $request->end_time,
+                'notes' => $request->notes
+            ]);
+
+            // Jika type == 2, masukkan semua APAR ke inspeksi
+            if ($request->type == 2) {
+                $allApar = Apar::all();
+
+                foreach ($allApar as $apar) {
+                    AparInspection::create([
+                        'inspection_schedule_id' => $schedule->id,
+                        'apar_id' => $apar->id,
+                        'status' => null,
+                        'notes' => null,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.schedule.index')
+                ->with('success', 'Agenda berhasil disimpan.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Gagal menyimpan agenda inspeksi: ' . $e->getMessage(), [
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]);
+
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan. Silakan coba lagi.');
+        }
     }
 
     public function show($id){
@@ -73,18 +118,19 @@ class InspectionScheduleController extends Controller
         $inspections = $schedule->aparInspections;
 
         return DataTables::of($inspections)
-            ->addColumn('lokasi', fn($i) => $i->apar->location->location_name)
-            ->addColumn('detail', fn($i) => $i->apar->location_detail)
-            ->addColumn('brand', fn($i) => $i->apar->brand)
-            ->addColumn('media', fn($i) => $i->apar->media->media_name)
+            ->addColumn('lokasi', fn($i) => $i->apar->location?->location_name ?? '-')
+            ->addColumn('detail', fn($i) => $i->apar->location_detail ?? '-')
+            ->addColumn('brand', fn($i) => $i->apar->brand ?? '-')
+            ->addColumn('media', fn($i) => $i->apar->media?->media_name ?? '-')
             ->addColumn('status', function ($i) {
                 return $i->is_checked
                     ? '<span class="badge bg-success bg-opacity-10 text-success">✓ Selesai</span>'
                     : '<span class="badge bg-warning bg-opacity-10 text-warning">Belum</span>';
             })
             ->addColumn('note', fn($i) => $i->note ?? '-')
-            ->rawColumns(['status']) // agar HTML badge dirender
+            ->rawColumns(['status'])
             ->make(true);
+
     }
 
     public function update(Request $request)

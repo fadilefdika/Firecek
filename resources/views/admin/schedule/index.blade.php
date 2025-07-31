@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-semibold mb-0">📅 Agenda Inspeksi</h4>
             <button class="btn btn-outline-danger rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#modalTambah">
-                + Tambah Agenda
+                Tambah Agenda
             </button>
         </div>
 

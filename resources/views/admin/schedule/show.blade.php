@@ -97,7 +97,7 @@ $(document).ready(function () {
         ajax: '{{ route("admin.schedule.inspections", $schedule->id) }}',
         columns: [
             { data: 'lokasi', name: 'lokasi', className: 'ps-4' },
-            { data: 'detail', name: 'detail' },
+            { data: 'detail', name: 'detail lokasi' },
             { data: 'brand', name: 'brand' },
             { data: 'media', name: 'media' },
             { data: 'status', name: 'status', orderable: false, searchable: false },

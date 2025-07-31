@@ -104,17 +104,21 @@ class AparController extends Controller
 
     public function show($id)
     {
-        $apar = Apar::with(['location', 'media'])->findOrFail($id); 
+        $apar = Apar::with(['location', 'media', 'aparInspections.schedule'])->findOrFail($id); 
         $medias = Media::all();
         $locations = Location::all();
 
-        // Ambil pertanyaan berdasarkan media
+        // Sort inspections by schedule date
+        $apar->aparInspections = $apar->aparInspections->sortBy(fn($i) => $i->schedule->start_date);
+
+        // Ambil pertanyaan checklist sesuai media
         $questions = InspectionQuestion::with('options')
             ->where('media_id', $apar->media_id)
             ->get();
 
         return view('admin.apar.show', compact('apar', 'medias', 'locations', 'questions'));
     }
+
 
     public function edit($id)
     {

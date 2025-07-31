@@ -22,4 +22,10 @@ class AparInspection extends Model
     {
         return $this->belongsTo(Apar::class);
     }
+    
+    public function schedule()
+    {
+        return $this->belongsTo(InspectionSchedule::class, 'inspection_schedule_id');
+    }
+
 }

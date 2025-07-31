@@ -32,4 +32,9 @@ class Apar extends Model
         return $this->belongsTo(Location::class);
     }
 
+    public function aparInspections()
+    {
+        return $this->hasMany(AparInspection::class);
+    }
+
 }
