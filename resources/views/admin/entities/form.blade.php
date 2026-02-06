@@ -7,7 +7,7 @@
     $isCreate = !$isEdit && !$isCopy;
 
     $formAction = ($isEdit) ? route('admin.entities.update', $entity->id) : route('admin.entities.store');
-    $title = $isCreate ? 'Tambah Entity' : ($isCopy ? 'Copy Entity' : 'Edit Entity');
+    $title = $isCreate ? 'Tambah Data' : ($isCopy ? 'Copy Data' : 'Edit Data');
     $color = $isCreate ? 'primary' : ($isCopy ? 'info text-white' : 'warning');
 @endphp
 
