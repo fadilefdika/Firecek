@@ -1,0 +1,36 @@
+# Laravel Standard
+/node_modules
+/vendor
+/.phpunit.cache
+/.phpunit.result.cache
+.env
+.env.backup
+.env.production
+.phpactor.json
+npm-debug.log
+yarn-error.log
+
+# Laravel Storage & Logs
+/storage/*.key
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*.php
+/storage/logs/*.log
+/storage/pail
+
+# Vite & Frontend Build
+/public/build
+/public/hot
+/public/storage
+
+# Server/Environment Specific
+Homestead.json
+Homestead.yaml
+/auth.json
+
+# IDE Specific
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
