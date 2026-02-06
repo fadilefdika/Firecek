@@ -1,0 +1,69 @@
+-- 1. Tabel ITEM (Master Perlengkapan/Alat)
+CREATE TABLE ITEM (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    item_name VARCHAR(100) NOT NULL,
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME DEFAULT GETDATE(),
+    creator_id INT DEFAULT 1
+);
+
+-- 2. Tabel ENTITY (Master Karyawan)
+CREATE TABLE ENTITY (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    code VARCHAR(50),
+    npk VARCHAR(100) NOT NULL,
+    employee_name VARCHAR(100) NOT NULL,
+    dept_id INT,
+    dept_name VARCHAR(100),
+    no_loker VARCHAR(50),
+    line_id INT,
+    line_name VARCHAR(100),
+    status VARCHAR(50) DEFAULT 'AKTIF',
+    entity_link_qr VARCHAR(255),
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME DEFAULT GETDATE(),
+    creator_id INT DEFAULT 1
+);
+
+-- 3. Tabel ENTITY_DETAIL_ITEM (Relasi Karyawan & Item - Banyak ke Banyak)
+CREATE TABLE ENTITY_DETAIL_ITEM (
+    entity_id INT NOT NULL,
+    item_id INT NOT NULL,
+    size VARCHAR(50),
+    notes VARCHAR(255),
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME DEFAULT GETDATE(),
+    creator_id INT DEFAULT 1,
+    PRIMARY KEY (entity_id, item_id),
+    CONSTRAINT FK_Entity_Detail FOREIGN KEY (entity_id) REFERENCES ENTITY(id) ON DELETE CASCADE,
+    CONSTRAINT FK_Item_Detail FOREIGN KEY (item_id) REFERENCES ITEM(id) ON DELETE CASCADE
+);
+
+-- 4. Tabel TRANSACTION (Header Transaksi)
+CREATE TABLE [TRANSACTION] (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    entity_id INT NOT NULL,
+    transaction_code VARCHAR(100) NOT NULL,
+    transaction_start_date DATE,
+    transaction_end_date DATE,
+    transaction_type VARCHAR(100), -- Contoh: Pengambilan / Pengembalian
+    transaction_status VARCHAR(100) DEFAULT 'OPEN',
+    transaction_image_start VARCHAR(255),
+    transaction_image_finish VARCHAR(255),
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME DEFAULT GETDATE(),
+    creator_id INT DEFAULT 1,
+    CONSTRAINT FK_Transaction_Entity FOREIGN KEY (entity_id) REFERENCES ENTITY(id)
+);
+
+-- 5. Tabel TRANSACTION_DETAIL_ITEM (Detail Item dalam Transaksi)
+CREATE TABLE TRANSACTION_DETAIL_ITEM (
+    transaction_id INT NOT NULL,
+    item_id INT NOT NULL,
+    created_at DATETIME DEFAULT GETDATE(),
+    updated_at DATETIME DEFAULT GETDATE(),
+    creator_id INT DEFAULT 1,
+    PRIMARY KEY (transaction_id, item_id),
+    CONSTRAINT FK_Trans_Header_Detail FOREIGN KEY (transaction_id) REFERENCES [TRANSACTION](id) ON DELETE CASCADE,
+    CONSTRAINT FK_Trans_Item_Detail FOREIGN KEY (item_id) REFERENCES ITEM(id)
+);
