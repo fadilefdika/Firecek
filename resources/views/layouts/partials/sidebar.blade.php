@@ -91,13 +91,6 @@
                     <span>ESD Assets</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="{{ route('admin.schedule.index') }}" 
-                   class="nav-link {{ request()->routeIs('admin.schedule.*') ? 'active' : '' }}">
-                    <i class="bi bi-calendar2-week"></i>
-                    <span>Schedule</span>
-                </a>
-            </li>
         </ul>
 
         <span class="menu-label">Administration</span>
