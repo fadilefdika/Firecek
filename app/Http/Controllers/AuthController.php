@@ -45,7 +45,7 @@ class AuthController extends Controller
         }
     
         Auth::guard('admin')->login($user);
-        return redirect()->route('admin.apar.index');
+        return redirect()->route('admin.entities.index');
     }
     
         

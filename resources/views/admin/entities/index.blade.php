@@ -3,157 +3,210 @@
 @section('content')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <style>
-        .card {
-            border-radius: 15px;
-            overflow: hidden;
+        :root {
+            --primary-ems: #2563eb;
+            --bg-body: #f8fafc;
         }
 
-        .table thead {
-            background-color: #f8f9fa;
+        /* Container & Card Styling */
+        .content-wrapper { padding: 1.5rem; }
+        
+        .card-main {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            background: #fff;
+        }
+
+        .card-header-custom {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Table Design */
+        .table thead th {
+            background-color: #f8fafc;
+            color: #64748b;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            border-top: none;
+            padding: 12px 16px;
         }
 
         .table td {
-            vertical-align: middle;
-            font-size: 0.95rem;
+            padding: 10px 16px;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #f1f5f9;
         }
 
-        .qr-container {
-            transition: transform 0.2s;
-            cursor: pointer;
-        }
-
-        .qr-container:hover {
-            transform: scale(1.1);
-        }
-
-        .badge-status {
-            padding: 0.5em 0.8em;
+        /* Avatar Soft */
+        .avatar-circle {
+            width: 32px;
+            height: 32px;
+            background-color: #eff6ff;
+            color: var(--primary-ems);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 8px;
-            font-weight: 500;
+            font-size: 1rem;
         }
 
-        .btn-action {
-            border-radius: 8px;
+        /* Status Badges */
+        .badge-soft {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .badge-soft-success { background: #dcfce7; color: #15803d; }
+        .badge-soft-danger { background: #fee2e2; color: #b91c1c; }
+
+        /* Action Buttons */
+        .btn-action-group .btn {
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: #64748b;
             transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            margin: 0 2px;
+        }
+        .btn-action-group .btn:hover {
+            background: #f8fafc;
+            color: var(--primary-ems);
+            border-color: var(--primary-ems);
         }
 
-        .btn-action:hover {
-            filter: brightness(90%);
-            transform: translateY(-1px);
+        /* QR Micro Style */
+        .qr-mini-box {
+            padding: 4px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            display: inline-block;
+            background: #fff;
+            transition: transform 0.2s;
+        }
+        .qr-mini-box:hover { transform: scale(1.05); cursor: pointer; }
+
+        /* Customizing DataTable Search */
+        .dataTables_filter input {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-size: 0.85rem;
         }
     </style>
 
-    <div class="container-fluid py-4">
-        <div class="card p-4 shadow-lg">
-            <div class="row mb-4 align-items-center">
-                <div class="col-md-6">
-                    <h2 class="fw-bold text-dark mb-0">Alokasi ESD</h2>
-                    <p class="text-secondary mb-0">Manajemen inventaris ESD Karyawan</p>
+    <div class="content-wrapper">
+        <div class="card-main">
+            <div class="card-header-custom">
+                <div>
+                    <h5 class="fw-bold text-dark mb-0">Alokasi Asset ESD</h5>
+                    {{-- <p class="text-muted small mb-0">Total {{ $entities->count() }} Karyawan terdaftar</p> --}}
                 </div>
-                <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                    <a href="{{ route('admin.entities.create') }}" class="btn btn-primary px-4 py-2 shadow-sm fw-bold">
-                        <i class="bi bi-person-plus-fill me-2"></i>Tambah Data
-                    </a>
-                </div>
+                <a href="{{ route('admin.entities.create') }}" class="btn btn-primary btn-sm px-3 py-2 fw-semibold">
+                    <i class="bi bi-plus-lg me-1"></i> Tambah Data
+                </a>
             </div>
 
-            <div class="card border-0 shadow-lg">
-                <div class="card-body p-0">
-                    <div class="table-responsive p-4">
-                        <table id="entityTable" class="table table-hover align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th width="50">No</th>
-                                    {{-- <th class="border-0">ID</th> --}}
-                                    <th class="border-0">Karyawan</th>
-                                    <th class="border-0 text-center">QR Code</th>
-                                    <th class="border-0">Departemen</th>
-                                    <th class="border-0 text-center">Status</th>
-                                    <th class="border-0 text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($entities as $entity)
-                                    <tr>
-                                        {{-- <td class="text-secondary fw-bold">#{{ $entity->id }}</td> --}}
-                                        <td class="text-muted fw-medium">{{ $loop->iteration }}</td>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar-soft bg-primary-soft rounded-circle me-3">
-                                                    <i class="bi bi-person-circle fs-3 text-primary"></i>
-                                                </div>
-                                                <div>
-                                                    <div class="fw-bold text-dark">{{ $entity->employee_name }}</div>
-                                                    <div class="small text-muted">NPK: {{ $entity->npk }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="qr-wrapper shadow-sm btn-view-qr" style="cursor: pointer;"
-                                                data-qr-code="{{ $entity->id }}" data-name="{{ $entity->employee_name }}"
-                                                data-npk="{{ $entity->npk }}">
-                                                {!! QrCode::size(45)->generate(url('/preview/' . $entity->id)) !!}
-                                            </div>
-                                            <div class="mt-1">
-                                                <a href="{{ route('admin.entities.download-qr', $entity->id) }}"
-                                                    class="text-primary fw-bold"
-                                                    style="font-size: 0.65rem; text-decoration: none;">
-                                                    <i class="bi bi-download"></i> UNDUH
-                                                </a>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="text-dark fw-medium">{{ $entity->dept_name ?? '-' }}</span>
-                                        </td>
-                                        <td class="text-center">
-                                            <span
-                                                class="badge {{ $entity->status == 'AKTIF' ? 'bg-success-soft text-success' : 'bg-danger-soft text-danger' }} badge-status">
-                                                <i class="bi bi-circle-fill me-1" style="font-size: 0.5rem"></i>
-                                                {{ $entity->status }}
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="btn-group shadow-sm border rounded">
-                                                <a href="{{ route('admin.entities.copy', $entity->id) }}"
-                                                    class="btn btn-white btn-sm" title="Duplikasi">
-                                                    <i class="bi bi-files text-info"></i>
-                                                </a>
-                                                <a href="{{ route('admin.entities.edit', $entity->id) }}"
-                                                    class="btn btn-white btn-sm" title="Edit">
-                                                    <i class="bi bi-pencil-square text-warning"></i>
-                                                </a>
-                                                <form action="{{ route('admin.entities.destroy', $entity->id) }}"
-                                                    method="POST" class="d-inline"
-                                                    onsubmit="return confirm('Hapus data karyawan ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-white btn-sm border-0">
-                                                        <i class="bi bi-trash3 text-danger"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="table-responsive">
+                <table id="entityTable" class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th width="40">No</th>
+                            <th>Info Karyawan</th>
+                            <th class="text-center">ID / QR</th>
+                            <th>Departemen</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center" width="120">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($entities as $entity)
+                            <tr>
+                                <td class="text-muted small">{{ $loop->iteration }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-3">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">{{ $entity->employee_name }}</div>
+                                            <div class="text-muted" style="font-size: 0.75rem;">NPK: {{ $entity->npk }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="qr-mini-box btn-view-qr shadow-sm" 
+                                         data-qr-code="{{ $entity->id }}" 
+                                         data-name="{{ $entity->employee_name }}"
+                                         data-npk="{{ $entity->npk }}">
+                                        {!! QrCode::size(32)->generate(url('/preview/' . $entity->id)) !!}
+                                    </div>
+                                    <div class="mt-1">
+                                        <a href="{{ route('admin.entities.download-qr', $entity->id) }}" 
+                                           class="text-primary fw-bold text-decoration-none" style="font-size: 0.6rem;">
+                                            <i class="bi bi-download"></i> DOWNLOAD
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-dark fw-medium">{{ $entity->dept_name ?? '-' }}</span>
+                                </td>
+                                <td class="text-center">
+                                    @if($entity->status == 'AKTIF')
+                                        <span class="badge-soft badge-soft-success">
+                                            <i class="bi bi-check-circle-fill"></i> Aktif
+                                        </span>
+                                    @else
+                                        <span class="badge-soft badge-soft-danger">
+                                            <i class="bi bi-x-circle-fill"></i> Non-Aktif
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-action-group">
+                                        <a href="{{ route('admin.entities.copy', $entity->id) }}" class="btn btn-sm" title="Copy">
+                                            <i class="bi bi-copy"></i>
+                                        </a>
+                                        <a href="{{ route('admin.entities.edit', $entity->id) }}" class="btn btn-sm" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="{{ route('admin.entities.destroy', $entity->id) }}" method="POST" class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-sm" onclick="return confirm('Hapus data?')">
+                                                <i class="bi bi-trash text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+            <div class="p-3"></div>
         </div>
     </div>
 
     <div class="modal fade" id="qrViewModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 shadow text-center p-4">
-                <div class="mb-3" id="qrContainerLarge">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-body text-center p-4">
+                    <div class="mb-3 p-2 bg-white d-inline-block border rounded-3" id="qrContainerLarge"></div>
+                    <h6 class="fw-bold mb-1 mt-2" id="qrNameTitle"></h6>
+                    <p class="text-muted small mb-4" id="qrNpkSubtitle"></p>
+                    <button type="button" class="btn btn-primary w-100 rounded-pill" data-bs-dismiss="modal">Selesai</button>
                 </div>
-                <h5 class="fw-bold mb-1" id="qrNameTitle"></h5>
-                <p class="text-muted small mb-3" id="qrNpkSubtitle"></p>
-                <button type="button" class="btn btn-light w-100 border" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
@@ -163,41 +216,30 @@
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    {{-- <script>
+    <script>
         $(document).ready(function() {
             $('#entityTable').DataTable({
                 "pageLength": 10,
+                "dom": '<"d-flex justify-content-between align-items-center p-3"f>rt<"d-flex justify-content-between align-items-center p-3"ip>',
                 "language": {
-                    "search": "Cari Karyawan:",
-                    "paginate": {
-                        "next": "»",
-                        "previous": "«"
-                    }
+                    "search": "",
+                    "searchPlaceholder": "Cari Karyawan...",
+                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data"
                 }
             });
-        });
-    </script> --}}
-
-    <script>
-        $(document).ready(function() {
-            $('#entityTable').DataTable();
 
             $('.btn-view-qr').on('click', function() {
                 const qrLink = $(this).data('qr-code');
-                const name = $(this).data('name');
-                const npk = $(this).data('npk');
-
-                $('#qrNameTitle').text(name);
-                $('#qrNpkSubtitle').text(npk);
-
+                $('#qrNameTitle').text($(this).data('name'));
+                $('#qrNpkSubtitle').text('NPK: ' + $(this).data('npk'));
                 $('#qrContainerLarge').html('');
-
                 new QRCode(document.getElementById("qrContainerLarge"), {
                     text: qrLink,
-                    width: 200,
-                    height: 200
+                    width: 180,
+                    height: 180,
+                    colorDark : "#0f172a",
+                    correctLevel : QRCode.CorrectLevel.H
                 });
-
                 $('#qrViewModal').modal('show');
             });
         });

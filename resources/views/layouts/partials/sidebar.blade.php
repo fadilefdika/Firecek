@@ -1,192 +1,115 @@
 @push('styles')
 <style>
+    /* Paksa variabel warna baru */
     :root {
-        --primary-ams: #E11D48; /* Konsisten dengan Login */
-        --primary-hover: #BE123C;
-        --sidebar-bg: #ffffff;
-        --text-sidebar: #475569;
-        --text-active: #0f172a;
+        --primary-ems: #2563eb !important; 
+        --bg-active: #eff6ff !important;
     }
 
     .sidebar {
-        background-color: var(--sidebar-bg);
-        border-right: 1px solid #e2e8f0;
-        height: 100vh;
-        width: 260px; /* Lebar standar industri */
-        transition: all 0.3s;
+        background-color: #ffffff !important;
+        border-right: 1px solid #e2e8f0 !important;
+        height: 100vh !important;
+        width: 260px !important;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        z-index: 1000;
     }
 
     .sidebar-header {
-        padding: 16px 20px;
-        border-bottom: 1px solid #f1f5f9;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        padding: 25px 20px !important;
+        border-bottom: 1px solid #f1f5f9 !important;
     }
 
-    /* Logo Diperkecil sesuai permintaan */
-    .sidebar .sidebar-logo {
-        margin: 0 !important;     /* Hilangkan margin 1rem (orange) */
-        padding: 15px 0 !important; /* Gunakan padding atas-bawah saja */
-        width: 100% !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        background: transparent !important; /* Hindari background hover jika ada */
+    .ems-brand {
+        font-size: 1.5rem !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        margin: 0 !important;
     }
+    .ems-brand span { color: var(--primary-ems) !important; }
 
-    .sidebar-logo img {
-        height: 10px !important; /* Sesuaikan ukuran besar yang Anda inginkan */
-        width: auto;
-        max-width: 75%; /* Mencegah gambar menyentuh pinggir sidebar */
-    }
-
-    .sidebar-logo span {
-        font-weight: 800;
-        color: #0f172a;
-        font-size: 1.1rem;
-        letter-spacing: -1px;
-    }
-
-    .sidebar-logo span b {
-        color: var(--primary-ams);
-    }
-
-    /* Navigation Links */
     .nav-custom {
-        padding: 12px;
+        padding: 20px 15px !important; /* Memberi jarak dari tepi kiri */
+    }
+
+    .menu-label {
+        font-size: 0.65rem !important;
+        font-weight: 700 !important;
+        color: #94a3b8 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+        margin: 20px 0 10px 15px !important;
+        display: block !important;
     }
 
     .nav-custom .nav-link {
-        color: var(--text-sidebar);
-        font-size: 0.875rem; /* Font lebih snappy */
-        font-weight: 500;
-        padding: 10px 12px;
-        border-radius: 8px;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 4px;
+        color: #475569 !important;
+        padding: 12px 15px !important;
+        border-radius: 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        text-decoration: none !important;
+        margin-bottom: 5px !important;
+    }
+
+    /* Override warna merah pada tombol aktif */
+    .nav-custom .nav-link.active {
+        background-color: var(--bg-active) !important;
+        color: var(--primary-ems) !important;
+        border: none !important; /* Hapus border merah jika ada */
     }
 
     .nav-custom .nav-link i {
-        font-size: 1.1rem;
-        color: #94a3b8;
-    }
-
-    .nav-custom .nav-link:hover {
-        background-color: #f8fafc;
-        color: var(--primary-ams);
-    }
-
-    .nav-custom .nav-link:hover i {
-        color: var(--primary-ams);
-    }
-
-    /* Active State Rose-Red */
-    .nav-custom .nav-link.active {
-        background-color: #fef2f2;
-        color: var(--primary-ams) !important;
-        font-weight: 600;
+        font-size: 1.2rem !important;
+        color: #94a3b8 !important;
     }
 
     .nav-custom .nav-link.active i {
-        color: var(--primary-ams);
-    }
-
-    /* Dropdown / Collapse */
-    .nav-dropdown-item {
-        padding-left: 42px !important;
-        font-size: 0.85rem !important;
-        color: #64748b !important;
-    }
-
-    .nav-dropdown-item.active {
-        color: var(--primary-ams) !important;
-        font-weight: 600 !important;
-    }
-
-    .toggle-icon {
-        font-size: 0.75rem !important;
-        transition: transform 0.2s;
-    }
-
-    .rotate-180 {
-        transform: rotate(180deg);
+        color: var(--primary-ems) !important;
     }
 </style>
 @endpush
 
 <nav class="sidebar" id="sidebar">
-    <div class="sidebar-header d-flex justify-content-center align-items-center">
-        <a href="{{ route('admin.apar.index') }}" class="sidebar-logo">
-            <img src="{{ asset('assets/images/ams.png') }}" alt="Logo" class="img-fluid">
-        </a>
-        <button class="btn btn-sm d-md-none" id="closeSidebar">
-            <i class="bi bi-x-lg"></i>
-        </button>
+    <div class="sidebar-header">
+        <h1 class="ems-brand">EMS<span>.</span></h1>
+        <small class="text-muted fw-bold uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;">ESD & Laundry Tracking</small>
     </div>
 
     <div class="nav-custom">
-        <ul class="nav flex-column">
-            {{-- Inventory --}}
+        <span class="menu-label">Main Menu</span>
+        <ul class="nav flex-column p-0 m-0">
             <li class="nav-item">
-                <a href="{{ route('admin.entities.index') }}"
-                   class="nav-link {{ request()->routeIs('admin.apar.*') ? 'active' : '' }}">
-                    <i class="bi bi-box-seam"></i>
-                    <span>ESD</span>
+                <a href="{{ route('admin.entities.index') }}" 
+                   class="nav-link {{ request()->routeIs('admin.entities.*') ? 'active' : '' }}">
+                    <i class="bi bi-shield-check"></i>
+                    <span>ESD Assets</span>
                 </a>
             </li>
-
-            {{-- Schedule --}}
             <li class="nav-item">
-                <a href="{{ route('admin.schedule.index') }}"
+                <a href="{{ route('admin.schedule.index') }}" 
                    class="nav-link {{ request()->routeIs('admin.schedule.*') ? 'active' : '' }}">
-                    <i class="bi bi-calendar-check"></i>
+                    <i class="bi bi-calendar2-week"></i>
                     <span>Schedule</span>
                 </a>
             </li>
+        </ul>
 
-            {{-- Master Data Group --}}
-            @php
-                $isMasterActive = request()->routeIs('admin.media.*', 'admin.location.*', 'admin.schedule-type.*');
-            @endphp
+        <span class="menu-label">Administration</span>
+        <ul class="nav flex-column p-0 m-0">
             <li class="nav-item">
-                <a class="nav-link justify-content-between {{ $isMasterActive ? '' : 'collapsed' }}"
-                   data-bs-toggle="collapse"
-                   href="#masterDataMenu"
-                   role="button"
-                   aria-expanded="{{ $isMasterActive ? 'true' : 'false' }}">
+                <a class="nav-link justify-content-between" data-bs-toggle="collapse" href="#masterDataMenu">
                     <div class="d-flex align-items-center gap-3">
-                        <i class="bi bi-folder2-open"></i>
+                        <i class="bi bi-database-gear"></i>
                         <span>Master Data</span>
                     </div>
-                    <i class="bi bi-chevron-down toggle-icon {{ $isMasterActive ? 'rotate-180' : '' }}"></i>
+                    <i class="bi bi-chevron-down" style="font-size: 0.7rem;"></i>
                 </a>
-
-                <div class="collapse {{ $isMasterActive ? 'show' : '' }}" id="masterDataMenu">
-                    <ul class="nav flex-column">
-                        <li>
-                            <a href="{{ route('admin.media.index') }}"
-                               class="nav-link nav-dropdown-item {{ request()->routeIs('admin.media.*') ? 'active' : '' }}">
-                               Media
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.location.index') }}"
-                               class="nav-link nav-dropdown-item {{ request()->routeIs('admin.location.*') ? 'active' : '' }}">
-                               Location
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ route('admin.schedule-type.index') }}"
-                               class="nav-link nav-dropdown-item {{ request()->routeIs('admin.schedule-type.*') ? 'active' : '' }}">
-                               Schedule Type
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </li>
         </ul>
     </div>

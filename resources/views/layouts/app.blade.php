@@ -27,196 +27,124 @@
 
     <style>
         :root {
-            --primary-red: #e63946;
-            --light-red: #ffebee;
-            --dark-red: #c62828;
-            --clean-white: #ffffff;
-            --bg-gray: #f8f9fa;
-            --text-dark: #212529;
-            --text-light: #6c757d;
+            --primary-ems: #2563eb; 
+            --primary-hover: #1d4ed8;
+            --bg-active: #eff6ff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --sidebar-width: 260px; /* Variabel lebar tetap */
         }
 
         body {
-            background-color: var(--bg-gray);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            /* font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; */
+            background-color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
         }
 
+        /* Sidebar Container */
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 200px;
-            background-color: var(--clean-white);
-            color: var(--text-dark);
-            padding-top: 0.5rem;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-            z-index: 1050;
-            transition: transform 0.3s ease;
-            border-right: 1px solid rgba(0,0,0,0.05);
-            font-size: 13px; /* Ukuran font keseluruhan sidebar */
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
+            width: var(--sidebar-width) !important;
+            background-color: #ffffff !important;
+            border-right: 1px solid #e2e8f0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            z-index: 1050 !important;
+            padding: 0 !important; /* Reset padding kontainer luar */
         }
 
-        .sidebar .logo {
-            font-size: 13px;
-            font-weight: 600;
-            padding: 0.75rem 1rem;
-            color: var(--primary-red);
-            text-align: left;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
+        /* Header Brand */
+        .sidebar-header {
+            padding: 30px 24px 20px !important; /* Memberi ruang di atas dan samping */
         }
 
-        .sidebar .logo i {
-            font-size: 1.2rem;
-            margin-right: 0.5rem;
+        .ems-brand {
+            font-size: 1.5rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -1px !important;
+            color: var(--text-main) !important;
+            margin: 0 !important;
+            line-height: 1 !important;
         }
 
-        .sidebar a {
-            color: var(--text-light);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            transition: all 0.2s;
-            margin: 0.25rem 1rem;
-            border-radius: 6px;
-            font-weight: 500;
-            font-size: 11px;
-            white-space: nowrap; /* Hindari wrapping */
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .ems-brand span { color: var(--primary-ems) !important; }
+
+        .brand-subtitle {
+            display: block !important;
+            font-size: 0.65rem !important;
+            color: var(--text-muted) !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            margin-top: 6px !important;
         }
 
-        .sidebar .active {
-            background-color: var(--primary-red);
-            color: var(--clean-white) !important;
+        /* Menu & Navigation */
+        .nav-custom {
+            padding: 10px 14px !important; /* Ruang agar menu tidak mepet sidebar */
         }
 
-        .sidebar a i {
-            margin-right: 0.5rem;
-            font-size: 11px;
+        .menu-label {
+            display: block !important;
+            font-size: 0.65rem !important;
+            font-weight: 700 !important;
+            color: #94a3b8 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            padding: 20px 12px 8px !important;
         }
 
-        /* Navbar - Clean White */
-        .navbar-custom {
-            margin-left: 200px;
-            background-color: var(--clean-white);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            z-index: 1000;
-            position: sticky;
-            top: 0;
-            padding: 0.75rem 1.5rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+        .nav-custom .nav-link {
+            color: var(--text-muted) !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            padding: 10px 16px !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            text-decoration: none !important;
+            margin-bottom: 4px !important;
+            transition: all 0.2s ease !important;
         }
 
-        /* Content */
-        .main-content {
-            margin-left: 200px;
-            transition: margin-left 0.3s;
+        /* Hover & Active State */
+        .nav-custom .nav-link:hover {
+            background-color: #f8fafc !important;
+            color: var(--primary-ems) !important;
         }
 
-        /* Cards */
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
-            transition: transform 0.2s, box-shadow 0.2s;
+        .nav-custom .nav-link.active {
+            background-color: var(--bg-active) !important;
+            color: var(--primary-ems) !important;
+            font-weight: 600 !important;
         }
 
-
-        .card-header {
-            background-color: var(--clean-white);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            font-weight: 600;
-            padding: 1rem 1.5rem;
+        .nav-custom .nav-link i {
+            font-size: 1.1rem !important;
+            color: #94a3b8 !important;
         }
 
-        /* Buttons */
-        .btn-primary {
-            background-color: var(--primary-red);
-            border-color: var(--primary-red);
-            padding: 0.5rem 1.25rem;
-            border-radius: 8px;
-            font-weight: 500;
+        .nav-custom .nav-link.active i {
+            color: var(--primary-ems) !important;
         }
 
-        .btn-primary:hover {
-            background-color: var(--dark-red);
-            border-color: var(--dark-red);
+        /* Layout Content Adjustment */
+        .navbar-custom, .main-content {
+            margin-left: var(--sidebar-width) !important;
+            transition: margin-left 0.3s ease;
         }
 
-        .btn-outline-primary {
-            color: var(--primary-red);
-            border-color: var(--primary-red);
-            border-radius: 8px;
-            font-weight: 500;
-        }
-
-
-        /* Hamburger Menu for Mobile */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            .navbar-custom {
-                margin-left: 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.show { transform: translateX(0); }
+            .navbar-custom, .main-content { margin-left: 0 !important; }
         }
-
-        .hamburger {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text-dark);
-            padding: 0.5rem;
-            border-radius: 8px;
-        }
-
-        .hamburger:hover {
-            background-color: var(--light-red);
-            color: var(--primary-red);
-        }
-
-        /* Form elements */
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-red);
-            box-shadow: 0 0 0 0.25rem rgba(230, 57, 70, 0.25);
-        }
-
-        .btn-close-sidebar {
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin-right: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .btn-close-sidebar:hover {
-            color: var(--primary-red);
-            background-color: rgba(230, 57, 70, 0.1);
-            border-radius: 8px;
-        }
-
     </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
 <body>
